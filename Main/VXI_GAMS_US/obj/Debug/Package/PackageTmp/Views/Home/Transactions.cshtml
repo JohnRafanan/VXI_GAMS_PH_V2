@@ -1,0 +1,304 @@
+﻿@using System.Configuration
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "TRANSACTIONS";
+}
+    <section class="content" ng-controller="transactionCtrl as vm">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="body p-t-5">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active"><a href="#location-tab" data-toggle="tab" aria-expanded="true">TRANSFER</a></li>
+                                <li role="presentation"><a href="#disposal-tab" data-toggle="tab" aria-expanded="true">DISPOSAL</a></li>
+                                <li role="presentation"><a href="#replacement-tab" data-toggle="tab" aria-expanded="true">REPLACEMENT</a></li>
+                                <li role="presentation"><a href="#loan-tab" data-toggle="tab" aria-expanded="true">LOAN</a></li>
+                                <li role="presentation"><a href="#farmin-tab" data-toggle="tab" aria-expanded="true">FARM IN</a></li>
+                                <li role="presentation"><a href="#farmout-tab" data-toggle="tab" aria-expanded="true">FARM OUT</a></li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane fade active in" id="location-tab">
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade" id="disposal-tab">
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade" id="replacement-tab">
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade" id="loan-tab">
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade" id="farmin-tab">
+                                    <!-- Select -->
+                                    <div class="row clearfix">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0">
+                                            <div class="col-sm-12">
+                                                <div class="row clearfix">
+                                                    <button class="btn bg-teal waves-effect btn-lg" type="submit" style="margin-left: 16px;" ng-click="vm.openFarmInSearch()">SEARCH</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 m-b-0">
+                                                <form id="it-form2233">
+                                                    <div class="row clearfix">
+                                                        <div class="col-sm-12 m-t-10">
+                                                            <b class="to-upper">PURCHASE ORDER NO.</b>
+                                                            <div class="form-group">
+                                                                <div class="form-line">
+                                                                    <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.FarmIn.PurchaseOrderNo">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row clearfix">
+                                                        <div class="col-sm-12 m-t-10">
+                                                            <b class="to-upper">SITE</b>
+                                                            <div class="form-group">
+                                                                <select class="form-control show-tick" id="select-farmin-site" ng-options="x.ItemName for x in vm.Sites track by x.Id" ng-model="vm.FarmIn.Site" title="Select an Item..." data-live-search="true" my-select>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row clearfix">
+                                                        <div class="col-sm-12 m-t-10">
+                                                            <b class="to-upper">vendor</b>
+                                                            <div class="form-group">
+                                                                <select class="form-control show-tick" id="select-farmin-vendor" ng-options="x.ItemName for x in vm.Vendors track by x.Id" ng-model="vm.FarmIn.VendorId" title="Select an Item..." data-live-search="true" my-select>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row clearfix">
+                                                        <div class="col-sm-12 m-t-10">
+                                                            <b class="to-upper">proforma invoice no.</b>
+                                                            <div class="form-group">
+                                                                <div class="form-line">
+                                                                    <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.FarmIn.ProformaInvoiceNo">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row clearfix">
+                                                        <div class="col-sm-12 m-t-10">
+                                                            <b class="to-upper">proforma invoice date</b>
+                                                            <div class="form-group">
+                                                                <div class="form-line">
+                                                                    <input type="date" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.FarmIn.ProformaInvoiceDate">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row clearfix">
+                                                        <div class="col-sm-12 m-t-10">
+                                                            <b class="to-upper">final invoice no.</b>
+                                                            <div class="form-group">
+                                                                <div class="form-line">
+                                                                    <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.FarmIn.FinalInvoiceNo">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row clearfix">
+                                                        <div class="col-sm-12 m-t-10">
+                                                            <b class="to-upper">final invoice date</b>
+                                                            <div class="form-group">
+                                                                <div class="form-line">
+                                                                    <input type="date" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.FarmIn.FinalInvoiceDate" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 m-b-0">
+                                                <form id="it-form123">
+                                                    <div class="row clearfix">
+                                                        <div class="col-sm-12 m-t-10">
+                                                            <b class="to-upper">status</b>
+                                                            <div class="form-group">
+                                                                <select class="form-control show-tick" id="select-farmin-status" ng-options="x.ItemName for x in vm.FarmInStatus track by x.Id" ng-model="vm.FarmIn.FarmStatusId" title="Select an Item..." data-live-search="true" my-select>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row clearfix">
+                                                        <div class="col-sm-12 m-t-10">
+                                                            <b class="to-upper">peza permit status</b>
+                                                            <div class="form-group">
+                                                                <select class="form-control show-tick" id="select-farmin-permit-status" ng-model="vm.FarmIn.PezaPermitStatus" title="Select an Item..." data-live-search="true" my-select>
+                                                                    <option ng-repeat="x in vm.FarmInPermitStatus" value="{{x}}">{{x}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row clearfix">
+                                                        <div class="col-sm-12 m-t-10">
+                                                            <b class="to-upper">peza form no.</b>
+                                                            <div class="form-group">
+                                                                <div class="form-line">
+                                                                    <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.FarmIn.PezaFormNo">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row clearfix">
+                                                        <div class="col-sm-12 m-t-10">
+                                                            <b class="to-upper">peza approval no.</b>
+                                                            <div class="form-group">
+                                                                <div class="form-line">
+                                                                    <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.FarmIn.PezaApprovalNo">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row clearfix">
+                                                        <div class="col-sm-12 m-t-10">
+                                                            <b class="to-upper">Purchase Order Date</b>
+                                                            <div class="form-group">
+                                                                <div class="form-line">
+                                                                    <input type="date" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.FarmIn.PurchaseOrderDate">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row clearfix">
+                                                        <div class="col-sm-12 m-t-10">
+                                                            <b class="to-upper">remarks</b>
+                                                            <div class="form-group">
+                                                                <div class="form-line">
+                                                                    <textarea rows="4" class="form-control no-resize" placeholder="Enter here..." ng-model="vm.FarmIn.Remarks"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="row clearfix">
+                                                    <button class="btn btn-primary waves-effect btn-lg float-right" type="button" ng-click="vm.saveFarmIn()">SAVE</button>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <br />
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0">
+                                                <ul class="nav nav-tabs" role="tablist">
+                                                    <li role="presentation" class="active"><a href="#preasset-li-tab" data-toggle="tab" aria-expanded="true">LINE ITEMS</a></li>
+                                                    <li role="presentation"><a href="#preasset-attachments-tab" data-toggle="tab" aria-expanded="true">ATTACHMENTS</a></li>
+                                                </ul>
+                                                <div class="tab-content">
+                                                    <div role="tabpanel" class="tab-pane fade active in" id="preasset-li-tab">
+                                                        <div class="row clearfix">
+                                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0">
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10 img-container">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div role="tabpanel" class="tab-pane fade" id="preasset-attachments-tab">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- #END# Select -->
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade" id="farmout-tab">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- #START# FarmIn Modal -->
+        <div class="modal fade" id="farmInModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="defaultModalLabel">FARM IN</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0">
+                                <table id="table-tbl" datatable="" dt-options="vm.dtOptions_farmIn" dt-columns="vm.dtColumns_farmIn" dt-instance="vm.dtInstance_farmIn" class="table table-bordered bordered table-striped table-condensed" style="width: 100%;">
+                                    <tfoot>
+                                        <tr>
+                                            <th>OPTION</th>
+                                            <th>CONTROL NO.</th>
+                                            <th>PURCHASE ORDER NO</th>
+                                            <th>PURCHASE ORDER DATE</th>
+                                            <th>SITE</th>
+                                            <th>VENDOR</th>
+                                            <th>PROFORMA INVOICE NO.</th>
+                                            <th>PROFORMA INVOICE DATE</th>
+                                            <th>FINAL INVOICE NO.</th>
+                                            <th>FINAL INVOICE DATE</th>
+                                            <th>STATUS</th>
+                                            <th>PEZA PERMIT STATUS</th>
+                                            <th>PEZA FORM NO.</th>
+                                            <th>PEZA APPROVAL NO.</th>
+                                            <th>REMARKS</th>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# FarmIn Modals -->
+        <!-- #START# Modals -->
+        <div class="modal fade" id="notifyModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Are you having trouble?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row clearfix">
+                            <div class="col-sm-12">
+                                <p>&rArr; If <strong style="color: black">dropdowns</strong> are empty, on your keyboard click <strong style="color: royalblue">Ctrl Shift R</strong> to fix the issue</p>
+                                <img src="~/public/image/ctrl-shift-r.png" style="width: 400px;margin-left: 70px;" />
+                            </div>
+                            <div class="col-sm-12">
+                                <p>&rArr; To <strong style="color: black">update</strong> your profile, click <strong style="color: royalblue">WAH Remote Support</strong>  to fix the issue</p>
+                                <img src="~/public/image/select-wahrs-logo.png" style="width: 400px;margin-left: 70px;" />
+                            </div>
+                            <div class="col-sm-12">
+                                <hr />
+                                <p>&rArr; For <strong style="color: black">other</strong> inquiries, kindly file a ticket on <a href="https://itrack-ph.vxi.com.ph/" style="color: royalblue">iTRACK</a> </p>
+                            </div>
+                            <div class="col-sm-12 centered">
+                                <small style="font-style: italic;">(This message will automatically close after 10sec)</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# Modals -->
+    </section>
+@section scripts
+{
+    <script>
+        var requestorId = "@(User.Identity.GetUserId()?.ToLower())";
+        $("#notifyModal").on("hidden.bs.modal",
+            function() {
+                Cookies.set("popup", "1");
+            });
+        $(document).on("click", ".upload-btn", function() {
+            $($(this).siblings()[0]).click();
+        });
+    </script>
+    <script src="~/public/app/controllers/transaction.controller.js@(ConfigurationManager.AppSettings["IMPORT_VERSION"])"></script>
+}

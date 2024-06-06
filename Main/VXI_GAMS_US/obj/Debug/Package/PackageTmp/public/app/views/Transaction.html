@@ -1,0 +1,66 @@
+﻿<div class="page-loader-wrapper">
+    <div class="loader">
+        <div class="preloader">
+            <div class="spinner-layer pl-red">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+        <p>Please wait...</p>
+    </div>
+</div>
+<div id="transaction">
+    <!-- Select -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0">
+            <div class="col-sm-12">
+                <div class="row clearfix">
+                    <div class="btn-group" ng-show="selectedItems > 0">
+                        <a href="#" class="btn btn-default">You have selected {{selectedItems}} items. What would you like to do?</a>
+                        <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Select an Action <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Transfer</a></li>
+                            <li><a href="#">Dispose</a></li>
+                            <li><a href="#">Replace</a></li>
+                            <!--<li class="divider"></li>
+                            <li><a href="#">Separated link</a></li>-->
+                        </ul>
+                    </div>
+                    <button class="btn bg-amber waves-effect btn-lg float-right" type="submit" style="margin-left: 16px;" ng-click="vm.openAssetModal()">RELOAD</button>
+                </div>
+            </div>
+        </div>
+
+        <div ng-hide="useBulkUpload" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0">
+            <div class="col-sm-12">
+                <div class="row clearfix">
+                    <table datatable="ng" class="table table-bordered table-striped table-hover dataTable" style="font-weight: normal">
+                        <thead>
+                            <tr>
+                                <th style="background-color: rgb(88, 93, 88); font-weight: normal; color: yellow">IMAGE</th>
+                                <th style="background-color: rgb(88, 93, 88); font-weight: normal; color: yellow">CONTROL #</th>
+                                <th style="background-color: rgb(88, 93, 88); font-weight: normal; color: yellow">DESCRIPTION</th>
+                                <th style="background-color: rgb(88, 93, 88); font-weight: normal; color: yellow">SERIAL NO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in objApproval.Asset">
+                                <td>
+                                    <img ng-src="{{item.ImagePicture}}" alt="" class="img-responsive" style="max-width: 100%;max-height: 100px;" />
+                                </td>
+                                <td>{{item.ControlNo}}</td>
+                                <td>{{item.Description}}</td>
+                                <td>{{item.SerialNo}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Select -->
+</div>

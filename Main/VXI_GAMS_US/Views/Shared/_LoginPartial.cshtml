@@ -1,0 +1,67 @@
+﻿@using System.Activities.Statements
+@using System.Security.Cryptography
+@using Microsoft.AspNet.Identity
+@using VXI_GAMS_US.Controllers
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown" id="special-home">
+                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                    <img src="~/public/image/home.png" class="menu-btn" />
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="body">
+                        <ul class="menu tasks">
+                            <li>
+                                <a href="#!/App/Index/Main" target="_self">
+                                    <h4>
+                                        ASSETS
+                                    </h4>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#!/App/Index/Scan" target="_self">
+                                    <h4>
+                                        SCAN QR
+                                    </h4>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#!/App/Index/Print" target="_self">
+                                    <h4>
+                                        PRINT QR
+                                    </h4>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#!/App/Index/Manage" target="_self">
+                                    <h4>
+                                        MANAGE
+                                    </h4>
+                                </a>
+                            </li>
+                           
+                            <li>
+                                <a href="@Url.Action("Read", "Document", new { type = 1 })" target="_blank">
+                                    <h4>
+                                        USER GUIDE
+                                    </h4>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Read", "Document", new { type = 2 })" target="_blank">
+                                    <h4>
+                                        FAQ
+                                    </h4>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    }
+}

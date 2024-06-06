@@ -1,0 +1,293 @@
+﻿@using System.Configuration
+@using System.Security.Cryptography
+@using Microsoft.AspNet.Identity
+@using VXI_GAMS_US.Controllers
+<!DOCTYPE html>
+<html ng-app="applicationModule">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="pragma" content="no-cache">
+    @*<title>@ViewBag.Title - VXI</title>*@
+    <title>GLOBAL ASSET MANAGEMENT</title>
+    <link href="~/public/css/themes/all-themes.min.css" rel="stylesheet" />
+    <link href="~/public/plugins/animate-css/animate.min.css" rel="stylesheet" />
+    <link href="~/public/plugins/node-waves/waves.min.css" rel="stylesheet" />
+    <link href="~/public/plugins/material-design-iconic-font/css/material-design-iconic-font.min.css" rel="stylesheet" />
+    <link href="~/public/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/public/plugins/bootstrap-tagsinput/bootstrap-tagsinput-typeahead.css" rel="stylesheet" />
+    <link href="~/public/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/public/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
+    <link href="~/public/plugins/angular-datatables/requirements/datatables.min.css" rel="stylesheet" />
+    <link href="~/public/plugins/angular-datatables/plugins/bootstrap/datatables.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/public/plugins/material-icons/material-icons.css" rel="stylesheet" />
+    <link href="~/public/plugins/multi-select/css/multi-select.css" rel="stylesheet" />
+    <link href="~/public/font/roboto/roboto.css" rel="stylesheet" />
+    <link href="~/public/css/materialize.css" rel="stylesheet" />
+    @Styles.Render("~/Content/css")
+    @*<link href="~/public/plugins/jquery-datatable/jquery.dataTables.min.css" rel="stylesheet" media="screen" />*@
+    <link href="~/public/css/style.css@(ConfigurationManager.AppSettings["IMPORT_VERSION"])" rel="stylesheet" />
+    @Scripts.Render("~/bundles/modernizr")
+    <script>
+        @{
+            var nt = Request.LogonUserIdentity?.Name ?? string.Empty;
+            if (nt.Length > 0 && nt.Contains("\\"))
+            {
+                nt = nt.Replace("\\", "\\\\");
+            }
+        }
+        var nt = "@(nt)";
+        var url = "@($"{Request.Url?.Scheme}://{Request.Url?.Authority}{Url.Content("~")}")";
+        //var username = "@(User.Identity.Name)";
+        var globalBaseUrl = "@(ConfigurationManager.AppSettings["MANAGE_API_BASE_URL"])";
+        var globalApiBaseUrl = "@($"{Request.Url?.Scheme}://{Request.Url?.Authority}{Url.Content("~")}{ConfigurationManager.AppSettings["API_BASE_URL"]}")";
+        var globalRegion = "@(ConfigurationManager.AppSettings["GLOBAL_REGION"])";
+        var iv = "@(ConfigurationManager.AppSettings["IMPORT_VERSION"])";
+        @{
+            var hrid = string.Empty;
+            var roles = string.Empty;
+            if (Session["Account"] is SessionUser e)
+            {
+                hrid = e.HRID;
+                roles = e.UserRole.Aggregate(roles, (current, role) => current + $"'{role.ItemName}',").TrimEnd(',');
+            }
+        }
+        var globalRoles = [@(Html.Raw(roles))];
+        var username = "@(hrid)";
+        var root = "@(ConfigurationManager.AppSettings["spa-root"])";
+    </script>
+
+    <style>
+        /* Add the CSS here */
+        body {
+            margin: 0;
+            padding-bottom: 60px; /* Space for footer */
+        }
+
+        .content {
+            /* Your main content styling */
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #f1f1f1;
+            z-index: 1000; /* Bring it forward */
+            padding: 10px 0;
+        }
+
+        .footer-container {
+            position: relative !important;
+        }
+
+        .footer-version {
+            top: 21px;
+            width: 290px;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            color: black;
+            background-color: transparent;
+        }
+
+        .footer-main {
+            text-align: center;
+        }
+
+            .footer-main img {
+                width: 240px !important;
+                height: auto !important;
+            }
+    </style>
+</head>
+<body ng-controller="bodyCtrl" style="min-height:90vh">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                @*<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>*@
+                <a href="javascript: document.getElementById('logoutForm').submit()" target="_self" class="brand-logo">
+                    <img style="margin-left: 101px !important;" src="~/public/image/brand.png@(ConfigurationManager.AppSettings["IMPORT_VERSION"])" class="navbar-brand" alt="@(ViewBag.Title)" />
+                </a>
+            </div>
+            <div>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        <!-- Page Loader -->
+        <div class="page-loader-wrapper">
+            <div class="loader">
+                <div class="preloader">
+                    <div class="spinner-layer pl-red">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+                <p>Please wait...</p>
+            </div>
+        </div>
+        <!-- #END# Page Loader -->
+        @if (Request.IsAuthenticated)
+        {
+            <div>
+                @RenderBody()
+            </div>
+
+        }
+        else
+        {
+            <span>
+                @RenderBody()
+            </span>
+        }
+        @{
+            var iTECHLogo = "https://vxiptihr01.vxi.com.ph/appimage/footer/LOGOblack_2021.png";
+            var hash = "";
+            try
+            {
+                using (var webClient = new WebClient())
+                {
+                    webClient.UseDefaultCredentials = true;
+                    var imageBytes = webClient.DownloadData(iTECHLogo);
+                    hash = $"?v={Convert.ToBase64String(new SHA1CryptoServiceProvider().ComputeHash(imageBytes))}";
+                }
+            }
+            catch
+            {
+                //ignore
+            }
+        }
+
+        <footer>
+            <!-- Copyright -->
+            <div class="footer-container">
+                <div class="footer-version">
+                    <code style="color: black !important;"><strong>Version:</strong> @(ConfigurationManager.AppSettings["IMPORT_VERSION"].ToString().Replace("?ver=", string.Empty)) &nbsp;&nbsp;&nbsp; <strong>Date:</strong> @(ConfigurationManager.AppSettings["IMPORT_VERSION_DATE"].ToString().Replace("?ver=", string.Empty))</code>
+                </div>
+                <div class="footer-main">
+                    <img src="@(iTECHLogo)@(hash)" alt="@DateTime.Now.Year &copy; INNOVATION & TECHNOLOGY (iTECH)" draggable="false" />
+                </div>
+            </div>
+            <!-- Copyright -->
+        </footer>
+
+        <!--<footer style="position:absolute; bottom:0; left:0; right:0">-->
+        <!-- Copyright -->
+        <!--<div style="position: relative !important;">
+            <div style="width: 290px; position: absolute; right: 0; bottom: 0;" class="footer-copyright text-center py-3">
+                <code style="color: black; background-color: transparent; "><strong>Version:</strong> @(ConfigurationManager.AppSettings["IMPORT_VERSION"].ToString().Replace("?ver=", string.Empty)) &nbsp;&nbsp;&nbsp; <strong>Date:</strong> @($"{File.GetLastWriteTime(System.Web.HttpContext.Current.Server.MapPath("~/Web.config")):MM/dd/yyyy}")</code>
+            </div>
+            <div class="footer-copyright text-center py-3">
+                <img style="width: 240px !important; height: auto !important;" src="@(iTECHLogo)@(hash)" alt="@DateTime.Now.Year &copy; INNOVATION & TECHNOLOGY (iTECH)" draggable="false" />
+            </div>
+        </div>-->
+        <!-- Copyright -->
+        <!--</footer>-->
+    </div>
+
+    @*@Scripts.Render("~/bundles/jquery")*@
+    @*@Scripts.Render("~/bundles/bootstrap")*@
+    <script src="~/public/plugins/Intl/Intl.min.js"></script>
+    <script src="~/public/plugins/js-cookie/js.cookie.js"></script>
+    <script src="~/public/plugins/xlsx/xlsx.full.min.js"></script>
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.4.1.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script type="text/javascript">
+        if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) {
+            document.write('<link href="/Content/jquery-ui.min.css" rel="stylesheet" />');
+            document.write('<script src="/Scripts/jquery-ui.min.js"><\/script>');
+        }
+    </script>
+    <script src="~/public/plugins/ng-Idle/angular-idle.min.js"></script>
+    <script src="~/Scripts/angular-route.min.js"></script>
+    <script src="~/Scripts/angular-sanitize.min.js"></script>
+    <script src="~/public/plugins/fusioncharts/fusioncharts.js"></script>
+    <script src="~/public/plugins/fusioncharts/angular-fusioncharts.min.js"></script>
+    <script src="~/public/plugins/fusioncharts/themes/fusioncharts.theme.fusion.js"></script>
+    <script src="~/public/plugins/momentjs/moment.js"></script>
+    <script src="~/public/plugins/momentjs/moment-timezone.min.js"></script>
+    <script src="~/public/plugins/sweetalert/sweetalert.2.1.2.min.js"></script>
+    <script src="~/public/plugins/printer/jquery.print.js"></script>
+    <script src="~/public/plugins/jquery-datatable/jquery.dataTables.js"></script>
+    <script src="~/public/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/public/plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
+    <script src="~/public/plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
+    <script src="~/public/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
+    <script src="~/public/plugins/jquery-datatable/extensions/export/jszip.min.js"></script>
+    <script src="~/public/plugins/jquery-datatable/extensions/export/pdfmake.min.js"></script>
+    <script src="~/public/plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
+    <script src="~/public/plugins/bootstrap-tagsinput/bootstrap-tagsinput-angular.min.js"></script>
+    <script src="~/public/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/public/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="~/public/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+    <script src="~/public/plugins/node-waves/waves.min.js"></script>
+    <script src="~/public/plugins/angular-datatables/requirements/datatables.min.js"></script>
+    <script src="~/public/plugins/jquery-datatable/dataTables.columnFilter.js"></script>
+    <script src="~/public/plugins/angular-datatables/plugins/columnfilter/angular-datatables.columnfilter.min.js"></script>
+    <script src="~/public/plugins/angular-datatables/requirements/pdfmake.min.js"></script>
+    <script src="~/public/plugins/angular-datatables/requirements/vfs_fonts.js"></script>
+    <script src="~/public/plugins/angular-datatables/angular-datatables.js"></script>
+    <script src="~/public/plugins/instascan/instascan.js"></script>
+    <script src="~/public/plugins/instascan/ini.js"></script>
+    @*@Scripts.Render("~/bundles/bicubicInterpolation")*@
+    @*@Scripts.Render("~/bundles/main")*@
+    <script src="~/public/js/admin.js"></script>
+    <script src="~/public/app/app.js@(ConfigurationManager.AppSettings["IMPORT_VERSION"])"></script>
+    <script src="~/public/app/services/popup.service.js@(ConfigurationManager.AppSettings["IMPORT_VERSION"])"></script>
+    <script src="~/public/app/services/toast.service.js@(ConfigurationManager.AppSettings["IMPORT_VERSION"])"></script>
+    <script src="~/public/app/factories/api.factory.js@(ConfigurationManager.AppSettings["IMPORT_VERSION"])"></script>
+    <script src="~/public/app/factories/signalr.factory.js@(ConfigurationManager.AppSettings["IMPORT_VERSION"])"></script>
+    <script src="~/public/app/controllers/body.controller.js@(ConfigurationManager.AppSettings["IMPORT_VERSION"])"></script>
+    <script src="~/public/app/controllers-spa/asset.controller.js@(ConfigurationManager.AppSettings["IMPORT_VERSION"])"></script>
+    <script src="~/public/app/controllers-spa/scanner.controller.js@(ConfigurationManager.AppSettings["IMPORT_VERSION"])"></script>
+    <script src="~/public/app/controllers-spa/approval.controller.js@(ConfigurationManager.AppSettings["IMPORT_VERSION"])"></script>
+    <script src="~/public/app/controllers-spa/print.controller.js@(ConfigurationManager.AppSettings["IMPORT_VERSION"])"></script>
+    <script src="~/public/app/controllers-spa/manage.controller.js@(ConfigurationManager.AppSettings["IMPORT_VERSION"])"></script>
+    @RenderSection("scripts", required: false)
+    <script>
+        //fix modal back-drop position and z-index when a modal is called in a modal
+        $(document).on('show.bs.modal', function () {
+            var zIndex = 1040 + (10 * $('.modal:visible').length);
+            $(this).css('z-index', zIndex);
+            setTimeout(function () {
+                $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+            }, 100);
+        });
+        function popup(link_id) {
+            var link = $("#" + link_id).attr("href") || "";
+            var kind = "_blank";
+            var params = [
+                `height=${screen.height}`,
+                `width=${screen.width}`,
+                "location=no",
+                "fullscreen=yes" // only works in IE, but here for completeness
+            ].join(",");
+            var popup = window.open(link, kind, params);
+            popup.moveTo(0, 0);
+        }
+        $(document).on("click", "#kb, .kb", function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            popup("kb");
+        });
+    </script>
+</body>
+</html>

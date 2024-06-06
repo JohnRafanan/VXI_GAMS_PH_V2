@@ -1,0 +1,358 @@
+﻿<div class="page-loader-wrapper">
+    <div class="loader">
+        <div class="preloader">
+            <div class="spinner-layer pl-red">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+        <p>Please wait...</p>
+    </div>
+</div>
+<style>
+    .center {
+        margin: auto !important;
+        width: 50% !important;
+        border: 3px solid #444 !important;
+        padding: 10px !important;
+        margin-bottom: 60px !important;
+        margin-top: 10px !important;
+    }
+
+    pre {
+        width: 1200px !important;
+        margin: auto !important;
+    }
+
+    .btn:not(.btn-link):not(.btn-circle) {
+        margin-bottom: 3px;
+        margin-top: 10px;
+    }
+
+    select {
+        width: 300px;
+    }
+
+    .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_paginate {
+        float: right !important;
+    }
+
+    .manage-header {
+        font-size: 1.5em !important;
+        font-weight: 900 !important;
+    }
+
+    .btn-primary {
+        margin-bottom: 20px !important;
+    }
+
+    .loader-container {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    select {
+        font-size: 2em;
+    }
+
+    table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td, .form-control {
+        font-size: 1.5em !important;
+    }
+
+    .form-control {
+        text-transform: uppercase !important;
+    }
+</style>
+<h2 style="margin: 0; margin-bottom: 20px; font-weight: 300; border-bottom: 3px solid; border-color: #f47a2c; padding-bottom: 15px;">HOME &rArr; <b style="color: #658fc3;">MANAGE</b></h2>
+<div id="home">
+    <!-- Select -->
+    <div class="row clearfix">
+        <div class="col-md-12" style="margin-bottom: 20px;">
+            <div class="col-md-1"></div>
+            <div class="col-md-2 float-left align-center" style="margin-top: 15px;">
+                <input type="radio" id="test1" name="radio-group" ng-model="ManageType" value="0" ng-click="getCategories()">
+                <label for="test1" class="manage-header">CATEGORY</label>
+            </div>
+            <div class="col-md-2 float-left align-center" style="margin-top: 15px;">
+                <input type="radio" id="test2" name="radio-group" ng-model="ManageType" value="1" ng-click="getSubCategories()">
+                <label for="test2" class="manage-header">SUB CATEGORY</label>
+            </div>
+            <div class="col-md-2 float-left align-center" style="margin-top: 15px;">
+                <input type="radio" id="test3" name="radio-group" ng-model="ManageType" value="2" ng-click="getManufacturer()">
+                <label for="test3" class="manage-header">BRAND</label>
+            </div>
+            <div class="col-md-2 float-left align-center" style="margin-top: 15px;">
+                <input type="radio" id="test5" name="radio-group" ng-model="ManageType" value="5" ng-click="getVendors()">
+                <label for="test5" class="manage-header">VENDOR</label>
+            </div>
+            <div class="col-md-2 float-left align-center" style="margin-top: 15px;">
+                <input type="radio" id="test4" name="radio-group" ng-model="ManageType" value="3">
+                <label for="test4" class="manage-header">TEMPLATE</label>
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+    </div>
+    <div class="row clearfix" ng-if="ManageType == '0'">
+        <!--<div class="col-md-12"><h1 class="align-center">CATEGORY UPDATE</h1></div>-->
+        <div class="col-md-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0 m-t-20">
+                <div class="col-sm-12">
+                    <div class="row clearfix loader-container" ng-if="Loading === true">
+                        <div class="preloader">
+                            <div class="spinner-layer pl-red">
+                                <div class="circle-clipper left">
+                                    <div class="circle"></div>
+                                </div>
+                                <div class="circle-clipper right">
+                                    <div class="circle"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix" ng-if="Loading === false">
+                        <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#defaultModal" ng-click="newData()">ADD NEW</button>
+                        <table datatable="ng" class="row-border hover table table-bordered table-hover table-striped dataTable no-footer">
+                            <thead>
+                                <tr>
+                                    <th>CATEGORY</th>
+                                    <th>CREATED BY</th>
+                                    <th>DATE CREATED</th>
+                                    <th>UPDATED BY</th>
+                                    <th>DATE UPDATED</th>
+                                    <th>OPTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in Categories track by item.Id">
+                                    <td>{{ item.Code }}</td>
+                                    <td>{{ item.CreatedBy }}</td>
+                                    <td>{{ dateToLocal(item.DateCreated) }}</td>
+                                    <td>{{ item.UpdatedBy }}</td>
+                                    <td>{{ dateToLocal(item.DateUpdated) }}</td>
+                                    <td><button class="btn btn-info waves-effect m-l-5 m-r-5" data-toggle="modal" data-target="#defaultModal" ng-click="editData(item.Id)">EDIT</button><button class="btn btn-danger waves-effect m-l-5 m-r-5" ng-click="deleteData(item.Id)">DELETE</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row clearfix" ng-if="ManageType == '1'">
+        <!--<div class="col-md-12"><h1 class="align-center">SUBCATEGORY UPDATE</h1></div>-->
+        <div class="col-md-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0 m-t-20">
+                <div class="col-sm-12">
+                    <div class="row clearfix loader-container" ng-if="Loading === true">
+                        <div class="preloader">
+                            <div class="spinner-layer pl-red">
+                                <div class="circle-clipper left">
+                                    <div class="circle"></div>
+                                </div>
+                                <div class="circle-clipper right">
+                                    <div class="circle"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix" ng-if="Loading === false">
+
+                        <div class="form-group">
+                            <h5 class="card-inside-title">SELECT A CATEGORY FIRST:</h5>
+                            <select ng-options="x.Code for x in Categories track by x.Id" ng-model="Category" ng-change="getSubCategories(Category.Id)"></select>
+                            <button type="button" class="btn btn-primary waves-effect" ng-disabled="Category.Id === undefined || Category.Id === null || Category.Id === '00000000-0000-0000-0000-000000000000' || Category.Id.length < 1" data-toggle="modal" data-target="#defaultModal" ng-click="newData()">ADD NEW</button>
+                        </div>
+
+                        <table datatable="ng" class="row-border hover table table-bordered table-hover table-striped dataTable no-footer">
+                            <thead>
+                                <tr>
+                                    <th>CATEGORY</th>
+                                    <th>CREATED BY</th>
+                                    <th>DATE CREATED</th>
+                                    <th>UPDATED BY</th>
+                                    <th>DATE UPDATED</th>
+                                    <th>OPTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in SubCategories track by item.Id">
+                                    <td>{{ item.Code }}</td>
+                                    <td>{{ item.CreatedBy }}</td>
+                                    <td>{{ dateToLocal(item.DateCreated) }}</td>
+                                    <td>{{ item.UpdatedBy }}</td>
+                                    <td>{{ dateToLocal(item.DateUpdated) }}</td>
+                                    <td><button class="btn btn-info waves-effect m-l-5 m-r-5" data-toggle="modal" data-target="#defaultModal" ng-click="editData(item.Id)">EDIT</button><button class="btn btn-danger waves-effect m-l-5 m-r-5" ng-click="deleteData(item.Id)">DELETE</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row clearfix" ng-if="ManageType == '2'">
+        <!--<div class="col-md-12"><h1 class="align-center">MANUFACTURER UPDATE</h1></div>-->
+        <div class="col-md-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0 m-t-20">
+                <div class="col-sm-12">
+                    <div class="row clearfix loader-container" ng-if="Loading === true">
+                        <div class="preloader">
+                            <div class="spinner-layer pl-red">
+                                <div class="circle-clipper left">
+                                    <div class="circle"></div>
+                                </div>
+                                <div class="circle-clipper right">
+                                    <div class="circle"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix" ng-if="Loading === false">
+                        <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#defaultModal" ng-click="newData()">ADD NEW</button>
+                        <table datatable="ng" class="row-border hover table table-bordered table-hover table-striped dataTable no-footer">
+                            <thead>
+                                <tr>
+                                    <th>CATEGORY</th>
+                                    <th>CREATED BY</th>
+                                    <th>DATE CREATED</th>
+                                    <th>UPDATED BY</th>
+                                    <th>DATE UPDATED</th>
+                                    <th>OPTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in Manufacturers track by item.Id">
+                                    <td>{{ item.Code }}</td>
+                                    <td>{{ item.CreatedBy }}</td>
+                                    <td>{{ dateToLocal(item.DateCreated) }}</td>
+                                    <td>{{ item.UpdatedBy }}</td>
+                                    <td>{{ dateToLocal(item.DateUpdated) }}</td>
+                                    <td><button class="btn btn-info waves-effect m-l-5 m-r-5" data-toggle="modal" data-target="#defaultModal" ng-click="editData(item.Id)">EDIT</button><button class="btn btn-danger waves-effect m-l-5 m-r-5" ng-click="deleteData(item.Id)">DELETE</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row clearfix" ng-if="ManageType == '3'">
+        <!--<div class="col-md-12"><h1 class="align-center">MANUFACTURER UPDATE</h1></div>-->
+        <div class="col-md-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0 m-t-20">
+                <div class="col-sm-12">
+                    <div class="row clearfix loader-container" ng-if="Loading === true">
+                        <div class="preloader">
+                            <div class="spinner-layer pl-red">
+                                <div class="circle-clipper left">
+                                    <div class="circle"></div>
+                                </div>
+                                <div class="circle-clipper right">
+                                    <div class="circle"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix" ng-if="Loading === false">
+                        <div class="form-group">
+                            <pre>You can only upload files &rArr; NewAsset(FarmIn).xlsx | FarmOut.xlsx | AssetDetails.xlsx | AssetAssignment.xlsx | AssetUpdate.xlsx | AssetReplacement.xlsx</pre>
+                            <input multiple class="btn btn-default waves-effect center" type="file" file-upload-on-change="setFile" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row clearfix" ng-if="ManageType == '5'">
+        <!--<div class="col-md-12"><h1 class="align-center">MANUFACTURER UPDATE</h1></div>-->
+        <div class="col-md-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0 m-t-20">
+                <div class="col-sm-12">
+                    <div class="row clearfix loader-container" ng-if="Loading === true">
+                        <div class="preloader">
+                            <div class="spinner-layer pl-red">
+                                <div class="circle-clipper left">
+                                    <div class="circle"></div>
+                                </div>
+                                <div class="circle-clipper right">
+                                    <div class="circle"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix" ng-if="Loading === false">
+                        <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#defaultModal" ng-click="newData()">ADD NEW</button>
+                        <table datatable="ng" class="row-border hover table table-bordered table-hover table-striped dataTable no-footer">
+                            <thead>
+                                <tr>
+                                    <th>CATEGORY</th>
+                                    <th>CREATED BY</th>
+                                    <th>DATE CREATED</th>
+                                    <th>UPDATED BY</th>
+                                    <th>DATE UPDATED</th>
+                                    <th>OPTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in Vendors track by item.Id">
+                                    <td>{{ item.Code }}</td>
+                                    <td>{{ item.CreatedBy }}</td>
+                                    <td>{{ dateToLocal(item.DateCreated) }}</td>
+                                    <td>{{ item.UpdatedBy }}</td>
+                                    <td>{{ dateToLocal(item.DateUpdated) }}</td>
+                                    <td><button class="btn btn-info waves-effect m-l-5 m-r-5" data-toggle="modal" data-target="#defaultModal" ng-click="editData(item.Id)">EDIT</button><button class="btn btn-danger waves-effect m-l-5 m-r-5" ng-click="deleteData(item.Id)">DELETE</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Select -->
+</div>
+<div class="modal fade" id="defaultModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="defaultModalLabel" ng-if="ManageType == '0'">CATEGORY</h4>
+                <h4 class="modal-title" id="defaultModalLabel" ng-if="ManageType == '1'">SUB CATEGORY</h4>
+                <h4 class="modal-title" id="defaultModalLabel" ng-if="ManageType == '2'">BRAND</h4>
+                <h4 class="modal-title" id="defaultModalLabel" ng-if="ManageType == '5'">VENDOR</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row clearfix">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <div class="form-line" ng-if="ManageType == '0'">
+                                <h5 class="card-inside-title">CATEGORY:</h5>
+                                <input type="text" class="form-control" ng-model="Category.Code" placeholder="ENTER CATEGORY HERE..." />
+                            </div>
+                            <div class="form-line" ng-if="ManageType == '1'">
+                                <h5 class="card-inside-title">SUB CATEGORY:</h5>
+                                <input type="text" class="form-control" ng-model="SubCategory.Code" placeholder="ENTER SUB CATEGORY HERE..." />
+                            </div>
+                            <div class="form-line" ng-if="ManageType == '2'">
+                                <h5 class="card-inside-title">BRAND:</h5>
+                                <input type="text" class="form-control" ng-model="Manufacturer.Code" placeholder="ENTER BRAND HERE..." />
+                            </div>
+                            <div class="form-line" ng-if="ManageType == '5'">
+                                <h5 class="card-inside-title">VENDOR:</h5>
+                                <input type="text" class="form-control" ng-model="Vendors.Code" placeholder="ENTER VENDOR HERE..." />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect" ng-click="saveData()">SAVE CHANGES</button>
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+            </div>
+        </div>
+    </div>
+</div>

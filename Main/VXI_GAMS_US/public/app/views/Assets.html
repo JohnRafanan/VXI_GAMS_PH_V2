@@ -1,0 +1,233 @@
+﻿<style>
+    div.dataTables_filter input {
+        width: 26em !important;
+        border-bottom: 2px solid #000 !important;
+    }
+
+    td.td-reqno {
+        cursor: pointer !important;
+        color: #211ecc !important;
+        text-shadow: 0 0 black !important;
+        text-decoration: underline !important;
+        min-width: 100px !important;
+        width: 100px !important;
+        max-width: 100px !important;
+    }
+
+    .table-hover > tbody > tr:hover > td.td-reqno {
+        color: #6aff6e !important;
+    }
+
+    table#assetHistory {
+        color: black !important;
+    }
+</style>
+<div class="page-loader-wrapper">
+    <div class="loader">
+        <div class="preloader">
+            <div class="spinner-layer pl-red">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+        <p>Please wait...</p>
+    </div>
+</div>
+<h2 style="margin: 0; margin-bottom: 20px; font-weight: 300; border-bottom: 3px solid; border-color: #f47a2c; padding-bottom: 15px;">HOME &rArr; <b style="color: #658fc3;">ASSETS</b></h2>
+<div id="home">
+    <!-- Select -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0">
+            <div class="col-sm-12">
+                <div class="row clearfix">
+                    <input type="checkbox" id="basic_checkbox_3" ng-model="useBulkUpload" ng-click="resizeWindow()">
+                    <label for="basic_checkbox_3">USE BULK UPLOADING</label>
+                </div>
+            </div>
+
+        </div>
+        <div ng-show="useBulkUpload" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0" id="#template-block" style="max-width: 1349px;">
+            <div class="col-sm-12">
+                <div class="row clearfix">
+                    <div class="col-sm-2">
+                        <b>TEMPLATE</b>
+                        <div class="form-group">
+                            <select class="form-control show-tick" ng-options="x.Code for x in Templates" ng-model="Template" title="Select an Item...">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group m-t-10">
+                            <button class="btn btn-default waves-effect btn-lg upload-btns" id="download-template-botton" type="button" ng-click="downloadTemplate()" ng-bind="isSaveOngoing === false ? 'DOWNLOAD':'SAVING...'" ng-disabled="Template.Url === '' || isSaveOngoing"></button>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group m-t-10">
+                            <input style="background-color: #e0e0e0 !important;padding: 6px !important; display: none !important;" class="btn btn-default waves-effect" type="file" id="asset-bulk-container" file-upload-on-change="setFile" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                            <button class="btn btn-primary waves-effect btn-lg upload-btns" type="submit" ng-bind="isSaveOngoing === false ? 'UPLOAD':'SAVING...'" ng-disabled="Template.Url === '' || isSaveOngoing" ng-click="openUploader()"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-hide="useBulkUpload" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0 p-l-0">
+            <div class="col-sm-2" ng-show="Sites.length > 0">
+                <b>SITE</b>
+                <div class="form-group">
+                    <select class="form-control show-tick" ng-options="x.LocationDesc for x in Sites" ng-model="Site" title="Select an Item...">
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-2" ng-show="Statuses.length > 0">
+                <b>STATUS</b>
+                <div class="form-group">
+                    <select class="form-control show-tick" ng-options="x.Code for x in Statuses" ng-model="Status" title="Select an Item...">
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-2" ng-show="Categories.length > 0">
+                <b>CATEGORY</b>
+                <div class="form-group">
+                    <select class="form-control show-tick" ng-options="x.Code for x in Categories" ng-model="Category" title="Select an Item...">
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-2" ng-show="SubCategories.length > 0">
+                <b>SUB-CATEGORY</b>
+                <div class="form-group">
+                    <select class="form-control show-tick" ng-options="x.Code for x in SubCategories" ng-model="SubCategory" title="Select an Item...">
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-2" ng-show="Manufacturers.length > 0">
+                <b>BRAND</b>
+                <div class="form-group">
+                    <select class="form-control show-tick" ng-options="x.Code for x in Manufacturers" ng-model="Manufacturer" title="Select an Item...">
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-2" style="margin-right: 0;">
+                <b>WAH/WAS</b>
+                <div class="form-group">
+                    <select class="form-control show-tick" ng-options="x for x in WorkTypes" ng-model="WorkType" title="Select an Item...">
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="col-sm-4">
+                    <div class="row clearfix">
+                        <!--<button class="btn bg-deep-orange waves-effect btn-lg" type="submit" style="margin-left: 16px;" data-toggle="modal" data-target="#newAssetModal">NEW ASSET</button>-->
+                        <button class="btn waves-effect btn-lg bg-teal float-left" type="submit" style="margin-left: 0;" ng-click="exportData()">EXPORT</button>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row clearfix">
+                        <!--<button class="btn bg-deep-orange waves-effect btn-lg" type="submit" style="margin-left: 16px;" data-toggle="modal" data-target="#newAssetModal">NEW ASSET</button>-->
+                        <button class="btn waves-effect btn-lg bg-blue-grey float-left" type="submit" style="margin-left: -380px;" ng-click="exportHistory()">EXPORT ALL ASSET HISTORY</button>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="row clearfix">
+                        <!--<button class="btn bg-deep-orange waves-effect btn-lg" type="submit" style="margin-left: 16px;" data-toggle="modal" data-target="#newAssetModal">NEW ASSET</button>-->
+                        <button class="btn btn-info waves-effect btn-lg float-right" type="submit" style="margin-left: 16px;" ng-click="refreshData()">REFRESH</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-hide="useBulkUpload" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0 m-t-20">
+            <div class="col-sm-12">
+                <div class="row clearfix">
+                    <table datatable="" dt-options="dtOptions_asset" dt-columns="dtColumns_asset" class="table table-bordered table-hover table-striped">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Select -->
+</div>
+
+<div class="modal fade" id="assetHistoryModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-uppercase" ng-bind="'HISTORY - '+ Asset.Code"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row">
+                        <!-- Striped Rows -->
+                        <div class="col-sm-12">
+
+
+                            <div ng-if="loadingHistory === true">
+                                <div class="preloader">
+                                    <div class="spinner-layer pl-red">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-if="loadingHistory === false">
+                                <div class="body table-responsive">
+                                    <table id="assetHistory" class="table table-bordered table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>SERIAL</th>
+                                                <th>SITE</th>
+                                                <th>STATUS</th>
+                                                <th>WAH/WAS</th>
+                                                <th>HRID</th>
+                                                <th>NAME</th>
+                                                <th>EMPLOYEE STATUS</th>
+                                                <th>EMPLOYEE TITLE</th>
+                                                <th>TRACKING #</th>
+                                                <th>IT TICKET #</th>
+                                                <th>UPDATED BY</th>
+                                                <th>DATE UPDATED</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-if="Histories.length === 0">
+                                            <tr>
+                                                <td colspan="12" style="text-align:center;">No Data</td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody>
+                                            <tr ng-repeat="x in Histories">
+                                                <td ng-bind-html="x.Serial"></td>
+                                                <td ng-bind-html="x.Site"></td>
+                                                <td ng-bind-html="x.Status"></td>
+                                                <td ng-bind="x.WorkType"></td>
+                                                <td ng-bind="x.Hrid"></td>
+                                                <td ng-bind="x.Name"></td>
+                                                <td ng-bind="x.EmployeeStatus"></td>
+                                                <td ng-bind="x.EmployeeTitle"></td>
+                                                <td ng-bind="x.TrackingNo"></td>
+                                                <td ng-bind="x.TicketNo"></td>
+                                                <td ng-bind="x.UpdatedBy"></td>
+                                                <td ng-bind="x.DateUpdated"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- #END# Striped Rows -->
+                    </div>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+            </div>
+        </div>
+    </div>
+</div>

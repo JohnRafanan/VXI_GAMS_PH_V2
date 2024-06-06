@@ -1,0 +1,21 @@
+﻿@using System.Configuration
+@using Microsoft.AspNet.Identity
+@using VXI_GAMS_US.Controllers
+@{
+    ViewBag.Title = "HOME";
+}
+@section scripts
+{
+    @* <script>
+        $.fn.modal.prototype.constructor.Constructor.DEFAULTS.backdrop = 'static';
+        $(document).on("click", ".upload-btn", function () {
+            $($(this).siblings()[0]).click();
+        });
+    </script>
+    <script src="~/public/plugins/instascan/instascan.min.js"></script>
+    
+        <script src="~/public/app/controllers/home.controller.js@(ConfigurationManager.AppSettings["IMPORT_VERSION"])"></script>
+        <script src="~/public/app/controllers/approver.controller.js@(ConfigurationManager.AppSettings["IMPORT_VERSION"])"></script>
+        <script src="~/public/app/controllers/transaction.controller.js@(ConfigurationManager.AppSettings["IMPORT_VERSION"])"></script>
+    *@
+}

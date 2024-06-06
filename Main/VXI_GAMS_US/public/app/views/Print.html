@@ -1,0 +1,214 @@
+﻿<style>
+    .center-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 75vh; /* Adjust as needed */
+    }
+
+</style>
+<div class="page-loader-wrapper">
+    <div class="loader">
+        <div class="preloader">
+            <div class="spinner-layer pl-red">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+        <p>Please wait...</p>
+    </div>
+</div>
+<h2 style="margin: 0; margin-bottom: 20px; font-weight: 300; border-bottom: 3px solid; border-color: #f47a2c; padding-bottom: 15px;">HOME &rArr; <b style="color: #658fc3;">PRINT QR CODES</b></h2>
+<div id="home">
+    <!-- Select -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0">
+            <div class="row clearfix">
+                <div class="col-sm-3" style="min-width: 320px; width: 320px; max-width: 320px; margin-right: 10px;">
+                    <b>LOAD SERIAL NO. via <a href="javascript:void(0)" title="Click to download" ng-click="downloadTemplate()">TEMPLATE</a></b>
+                    <div class="form-group">
+                        <input style="background-color: #e0e0e0 !important;padding: 6px !important;" class="btn btn-default waves-effect" type="file" id="asset-bulk-container" file-upload-on-change="setFile" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <b>&nbsp;</b>
+                    <div class="form-group">
+                        <button class="btn btn-danger waves-effect btn-lg" type="button" ng-click="PrintPage()" ng-bind="'PRINT PREVIEW'" ng-disabled="Assets.length < 1"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0 m-t-20">
+            <div class="col-sm-12">
+                <div class="row clearfix">
+                    <table datatable="ng" class="row-border hover table table-bordered table-hover table-striped dataTable no-footer">
+                        <thead>
+                            <tr>
+                                <!--<th>PRINT</th>-->
+                                <th>CODE</th>
+                                <th>DESCRIPTION</th>
+                                <th>SERIAL</th>
+                                <th>CATEGORY</th>
+                                <th>SUBCATEGORY</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="asset in Assets">
+                                <!--<td><input type="checkbox" class="print-box" ng-model="asset.Selected" /></td>-->
+                                <td>{{ asset.Code }}</td>
+                                <td>{{ asset.Description }}</td>
+                                <td>{{ asset.SerialNo }}</td>
+                                <td>{{ asset.Category.Code }}</td>
+                                <td>{{ asset.SubCategory.Code }}</td>
+                            </tr>
+                        </tbody>
+                        <!--<tfoot>
+                            <tr>
+                                <th></th>
+                                <th>CODE</th>
+                                <th>DESCRIPTION</th>
+                                <th>SERIAL</th>
+                                <th>CATEGORY</th>
+                                <th>SUBCATEGORY</th>
+                            </tr>
+                        </tfoot>-->
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Select -->
+</div>
+
+<div id="printSection">
+    <div id="printThis">
+        <table id="tblprint" cellspacing="0" cellpadding="0" border="1" class="dataGrid">
+            <tr ng-repeat="column in PrintView">
+                <td class="tdwidth">
+
+                    <div class="center-container" ng-if="column[0] != null">
+                        <div style="display: flex; align-items: center;">
+                            <img ng-src="{{getImagePath(column[0].Id)}}" style="margin-right: 10px; max-height: 100px; max-width: 100px; flex-shrink: 0;" alt="None" />
+                            <div>
+                                <label class="data" style="margin-top: 20px;">
+                                    PROPERTY OF VXI <br /> <br />
+                                    <!--{{column[0].Code}}<br />-->
+                                    {{column[0].Description}} {{column[0].Processor}} {{column[0].Ram}}
+                                </label>
+                                <label class="data" style="height: 35px;">
+                                    {{column[0].SerialNo}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!--<div id="printSection">
+    <div id="printThis">
+        <table id="tblprint" cellspacing="0" cellpadding="0" border="1" class="dataGrid">
+            <tr ng-repeat="column in PrintView">
+                <td class="tdwidth">
+                    <div ng-if="column[0] != null">
+                        <label class="data" style="margin-top: 20px;">
+                            {{column[0].Code}}
+                        </label>
+                        <label class="data">
+                            {{column[0].Description}}
+                        </label>
+                        <img ng-src="{{getImagePath(column[0].Id)}}" style="margin: 5px auto;" alt="None" />
+                        <label class="data" style="height: 35px;">
+                            {{column[0].Category.Code}}<br />
+                            {{column[0].SubCategory.Code}}
+                        </label>
+                    </div>
+                </td>
+                <td class="tdwidth">
+                    <div ng-if="column[1] != null">
+                        <label class="data" style="margin-top: 20px;">
+                            {{column[1].Code}}
+                        </label>
+                        <label class="data">
+                            {{column[1].Description}}
+                        </label>
+                        <img ng-src="{{getImagePath(column[1].Id)}}" style="margin: 5px auto;" alt="None" />
+                        <label class="data" style="height: 35px;">
+                            {{column[1].Category.Code}}<br />
+                            {{column[1].SubCategory.Code}}
+                        </label>
+                    </div>
+                </td>
+                <td class="tdwidth">
+                    <div ng-if="column[2] != null">
+                        <label class="data" style="margin-top: 20px;">
+                            {{column[2].Code}}
+                        </label>
+                        <label class="data">
+                            {{column[2].Description}}
+                        </label>
+                        <img ng-src="{{getImagePath(column[2].Id)}}" style="margin: 5px auto;" alt="None" />
+                        <label class="data" style="height: 35px;">
+                            {{column[2].Category.Code}}<br />
+                            {{column[2].SubCategory.Code}}
+                        </label>
+                    </div>
+                </td>
+                <td class="tdwidth">
+                    <div ng-if="column[3] != null">
+                        <label class="data" style="margin-top: 20px;">
+                            {{column[3].Code}}
+                        </label>
+                        <label class="data">
+                            {{column[3].Description}}
+                        </label>
+                        <img ng-src="{{getImagePath(column[3].Id)}}" style="margin: 5px auto;" alt="None" />
+                        <label class="data" style="height: 35px;">
+                            {{column[3].Category.Code}}<br />
+                            {{column[3].SubCategory.Code}}
+                        </label>
+                    </div>
+                </td>
+                <td class="tdwidth">
+                    <div ng-if="column[4] != null">
+                        <label class="data" style="margin-top: 20px;">
+                            {{column[4].Code}}
+                        </label>
+                        <label class="data">
+                            {{column[4].Description}}
+                        </label>
+                        <img ng-src="{{getImagePath(column[4].Id)}}" style="margin: 5px auto;" alt="None" />
+                        <label class="data" style="height: 35px;">
+                            {{column[4].Category.Code}}<br />
+                            {{column[4].SubCategory.Code}}
+                        </label>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tbody>
+                <tr></tr>
+                <tr></tr>
+                <br />
+                <tr>
+                    <td></td>
+                    <td colspan="10" rowspan="2">
+                        <p>
+                            This print-out is a system generated document which serves as an official copy and requires no signature.
+                            In case of discrepancy between this print-out and its electronic source, the latter shall be deemed
+                            controlling. QR Code System shall not be responsible for any liabilities that may arise due to unauthorized tampering, intercalations,
+                            and other changes made on this print-out.
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>-->

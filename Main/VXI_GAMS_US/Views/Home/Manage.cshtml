@@ -1,0 +1,597 @@
+﻿@using System.Configuration
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "MANAGE";
+}
+<style>
+    .td-all {
+        min-width: 90% !important;
+        width: 90% !important;
+        max-width: 90% !important;
+    }
+
+    .td-option {
+        width: 200px !important;
+    }
+
+        .td-option button {
+            min-width: 90px !important;
+            width: 90px !important;
+            max-width: 90px !important;
+            margin-right: 5px;
+        }
+
+    table.dataTable tbody th, table.dataTable tbody td {
+        vertical-align: middle;
+    }
+
+    .nav-tabs > li > a {
+        font-size: 20px;
+    }
+
+    .dataTables_wrapper .dataTables_scroll {
+        box-shadow: 0 0 0 1px #c5c5c5;
+    }
+
+    #section-to-print img {
+        width: 150px !important;
+        height: 150px !important;
+        display: block !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border: dashed 1px #000 !important;
+    }
+
+    /*@@media print {
+        #img-container {
+            margin-bottom: 30px;
+        }
+    }*/
+</style>
+<section class="content" ng-controller="assetManageCtrl as vm">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="body p-t-5">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active"><a href="#home" data-toggle="tab" aria-expanded="true">LOOKUPS</a></li>
+                            <li role="presentation"><a href="#user-tab" data-toggle="tab" aria-expanded="true">USERS</a></li>
+                            <li role="presentation"><a href="#qrcode-tab" data-toggle="tab" aria-expanded="true">PRINT QR CODE</a></li>
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade active in" id="home">
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <ul class="nav nav-tabs" role="tablist">
+                                            <li role="presentation" class="active"><a href="#category-tab" data-toggle="tab" aria-expanded="true">CATEGORIES</a></li>
+                                            <li role="presentation"><a href="#subcategory-tab" data-toggle="tab" aria-expanded="true">SUBCATEGORIES</a></li>
+                                            <li role="presentation"><a href="#notifications-tab" data-toggle="tab" aria-expanded="true">NOTIFICATIONS</a></li>
+                                            <li role="presentation"><a href="#vendors-tab" data-toggle="tab" aria-expanded="true">VENDORS</a></li>
+                                            <li role="presentation"><a href="#brands-tab" data-toggle="tab" aria-expanded="true">BRANDS</a></li>
+                                            <li role="presentation"><a href="#financial-treatment-tab" data-toggle="tab" aria-expanded="true" class="to-upper">financial treatment</a></li>
+                                            <li role="presentation"><a href="#group-tab" data-toggle="tab" aria-expanded="true" class="to-upper">group</a></li>
+                                            <li role="presentation"><a href="#expiry-tab" data-toggle="tab" aria-expanded="true" class="to-upper">Expiry Console</a></li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div role="tabpanel" class="tab-pane fade active in" id="category-tab">
+                                                <!-- Select -->
+                                                <div class="row clearfix">
+                                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 m-b-0">
+                                                        <form id="category-form">
+                                                            <div class="row clearfix">
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <b>CATEGORY</b>
+                                                                    <div class="form-group">
+                                                                        <div class="form-line">
+                                                                            <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.CategoryModel.Title">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-12">
+                                                                    <button class="btn btn-primary waves-effect btn-lg" type="submit" style="margin-top: 20px;" ng-click="vm.updateCategoryById()" ng-bind="vm.isSaveOngoing === false ? 'SAVE':'SAVING...'" ng-disabled="vm.isSaveOngoing"></button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 m-b-0">
+                                                        <form id="category2-form">
+                                                            <div class="row clearfix">
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <table datatable="" dt-options="vm.dtOptions_Category" dt-columns="vm.dtColumns_Category" dt-instance="vm.dtInstance_Category" class="table table-bordered bordered table-striped table-condensed" style="width: 100%;">
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <!-- #END# Select -->
+                                            </div>
+                                            <div role="tabpanel" class="tab-pane fade" id="subcategory-tab">
+                                                <!-- Select -->
+                                                <div class="row clearfix">
+                                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 m-b-0">
+                                                        <form id="subcategory-form">
+                                                            <div class="row clearfix">
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <b>CATEGORY</b>
+                                                                    <div class="form-group">
+                                                                        <select class="form-control show-tick" ng-options="x.ItemName for x in vm.Categories track by x.Id" ng-model="vm.SubCategoryModel.Category" title="Select an Item..." data-live-search="true" my-select>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <b>SUBCATEGORY</b>
+                                                                    <div class="form-group">
+                                                                        <div class="form-line">
+                                                                            <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.SubCategoryModel.Title">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <button class="btn btn-primary waves-effect btn-lg" type="submit" style="margin-top: 20px;" ng-click="vm.updateSubCategoryById()" ng-bind="vm.isSaveOngoing === false ? 'SAVE':'SAVING...'" ng-disabled="vm.isSaveOngoing"></button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 m-b-0">
+                                                        <form id="subcategory2-form">
+                                                            <div class="row clearfix">
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <table datatable="" dt-options="vm.dtOptions_SubCategory" dt-columns="vm.dtColumns_SubCategory" dt-instance="vm.dtInstance_SubCategory" class="table table-bordered bordered table-striped table-condensed" style="width: 100%;">
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <!-- #END# Select -->
+                                            </div>
+                                            <div role="tabpanel" class="tab-pane fade" id="notifications-tab">
+                                                <!-- Select -->
+                                                <div class="row clearfix">
+                                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 m-b-0">
+                                                        <form id="notifications-form">
+                                                            <div class="row clearfix">
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <b>EMAIL GROUP ADDRESS NAME</b>
+                                                                    <div class="form-group">
+                                                                        <div class="form-line">
+                                                                            <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.EmailNotificationModel.Title">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <b>TO ADDRESS</b>
+                                                                    <div class="form-group">
+                                                                        <div class="form-line">
+                                                                            <textarea rows="4" class="form-control no-resize" placeholder="Enter here..." ng-model="vm.EmailNotificationModel.EmailTo"></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <b>CC ADDRESS</b>
+                                                                    <div class="form-group">
+                                                                        <div class="form-line">
+                                                                            <textarea rows="4" class="form-control no-resize" placeholder="Enter here..." ng-model="vm.EmailNotificationModel.EmailCc"></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <button class="btn btn-primary waves-effect btn-lg" type="submit" style="margin-top: 20px;" ng-click="vm.updateEmailNotificationById()" ng-bind="vm.isSaveOngoing === false ? 'SAVE':'SAVING...'" ng-disabled="vm.isSaveOngoing"></button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 m-b-0">
+                                                        <form id="notifications2-form">
+                                                            <div class="row clearfix">
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <table datatable="" dt-options="vm.dtOptions_EmailNotification" dt-columns="vm.dtColumns_EmailNotification" dt-instance="vm.dtInstance_EmailNotification" class="table table-bordered bordered table-striped table-condensed" style="width: 100%;">
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <!-- #END# Select -->
+                                            </div>
+                                            <div role="tabpanel" class="tab-pane fade" id="vendors-tab">
+                                                <!-- Select -->
+                                                <div class="row clearfix">
+                                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 m-b-0">
+                                                        <form id="vendors-form">
+                                                            <div class="row clearfix">
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <b>VENDOR</b>
+                                                                    <div class="form-group">
+                                                                        <div class="form-line">
+                                                                            <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.VendorModel.Title">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <button class="btn btn-primary waves-effect btn-lg" type="submit" style="margin-top: 20px;" ng-click="vm.updateVendorById()" ng-bind="vm.isSaveOngoing === false ? 'SAVE':'SAVING...'" ng-disabled="vm.isSaveOngoing"></button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 m-b-0">
+                                                        <form id="vendors2-form">
+                                                            <div class="row clearfix">
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <table datatable="" dt-options="vm.dtOptions_Vendor" dt-columns="vm.dtColumns_Vendor" dt-instance="vm.dtInstance_Vendor" class="table table-bordered bordered table-striped table-condensed" style="width: 100%;">
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <!-- #END# Select -->
+                                            </div>
+                                            <div role="tabpanel" class="tab-pane fade" id="brands-tab">
+                                                <!-- Select -->
+                                                <div class="row clearfix">
+                                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 m-b-0">
+                                                        <form id="brands-form">
+                                                            <div class="row clearfix">
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <b>BRANDS</b>
+                                                                    <div class="form-group">
+                                                                        <div class="form-line">
+                                                                            <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.BrandModel.Title">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <button class="btn btn-primary waves-effect btn-lg" type="submit" style="margin-top: 20px;" ng-click="vm.updateBrandById()" ng-bind="vm.isSaveOngoing === false ? 'SAVE':'SAVING...'" ng-disabled="vm.isSaveOngoing"></button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 m-b-0">
+                                                        <form id="brands2-form">
+                                                            <div class="row clearfix">
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <table datatable="" dt-options="vm.dtOptions_Brand" dt-columns="vm.dtColumns_Brand" dt-instance="vm.dtInstance_Brand" class="table table-bordered bordered table-striped table-condensed" style="width: 100%;">
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <!-- #END# Select -->
+                                            </div>
+                                            <div role="tabpanel" class="tab-pane fade" id="financial-treatment-tab">
+                                                <div class="row clearfix">
+                                                    <form>
+                                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 m-b-0">
+                                                            <div class="row clearfix">
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <b>FINANCIAL TREATMENT</b>
+                                                                    <div class="form-group">
+                                                                        <div class="form-line">
+                                                                            <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.FinancialTreatmentModel.Title">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <button class="btn btn-primary waves-effect btn-lg" type="submit" style="margin-top: 20px;" ng-click="vm.updateFinancialTreatmentById()" ng-bind="vm.isSaveOngoing === false ? 'SAVE':'SAVING...'" ng-disabled="vm.isSaveOngoing"></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 m-b-0">
+                                                            <div class="row clearfix">
+                                                                <div class="col-sm-12 m-t-10">
+                                                                    <table datatable="" dt-options="vm.dtOptions_FinancialTreatment" dt-columns="vm.dtColumns_FinancialTreatment" dt-instance="vm.dtInstance_FinancialTreatment" class="table table-bordered bordered table-striped table-condensed" style="width: 100%;">
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div role="tabpanel" class="tab-pane fade" id="group-tab">
+                                                <div class="row clearfix">
+                                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 m-b-0">
+                                                        <div class="row clearfix">
+                                                            <div class="col-sm-12 m-t-10">
+                                                                <b>GROUP</b>
+                                                                <div class="form-group">
+                                                                    <div class="form-line">
+                                                                        <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.GroupModel.Title">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-12 m-t-10">
+                                                                <button class="btn btn-primary waves-effect btn-lg" type="submit" style="margin-top: 20px;" ng-click="vm.updateGroupById()" ng-bind="vm.isSaveOngoing === false ? 'SAVE':'SAVING...'" ng-disabled="vm.isSaveOngoing"></button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 m-b-0">
+                                                        <div class="row clearfix">
+                                                            <div class="col-sm-12 m-t-10">
+                                                                <table datatable="" dt-options="vm.dtOptions_Group" dt-columns="vm.dtColumns_Group" dt-instance="vm.dtInstance_Group" class="table table-bordered bordered table-striped table-condensed" style="width: 100%;">
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div role="tabpanel" class="tab-pane fade" id="expiry-tab" ng-controller="expiryCtrl">
+                                                <div class="row clearfix">
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0">
+                                                        <div class="col-md-12">
+                                                            <div class="table-responsive" style="margin-top: 20px">
+                                                                <table datatable="ng" dt-options="Table.dtOptions" dt-column-defs="Table.dtColumnDefs" class="table table-bordered table-striped table-hover dataTable" style="font-weight: normal">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th ng-hide="true">Id</th>
+                                                                            <th>IMAGE</th>
+                                                                            <th>CONTROL NO.</th>
+                                                                            <th>DESCRIPTION</th>
+                                                                            <th>SITE</th>
+                                                                            <th>WARRANTY START DATE</th>
+                                                                            <th>WARRANTY END DATE</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr ng-repeat="item in vm.ExpiryAssets">
+                                                                            <td ng-hide="true">{{item.Id}}</td>
+                                                                            <td class="td-center-img">
+                                                                                <div style="width: 100px;">
+                                                                                    <img src="{{item.ImagePicture}}" alt="" class="img-responsive" />
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>{{item.ControlNo}}</td>
+                                                                            <td>{{item.Description}}</td>
+                                                                            <td>{{item.Site}}</td>
+                                                                            <td ng-repeat="innerItem in item.FarmIn.FarmLineItemViewModel | filter:{Id:item.FarmLineItemId}">
+                                                                                <span ng-if="innerItem.Id === item.FarmLineItemId" ng-bind="innerItem.WarrantyStartDate"></span>
+                                                                            </td>
+                                                                            <td ng-repeat="innerItem in item.FarmIn.FarmLineItemViewModel | filter:{Id:item.FarmLineItemId}">
+                                                                                <span ng-if="innerItem.Id === item.FarmLineItemId" ng-bind="innerItem.WarrantyEndDate"></span>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="user-tab">
+                                <div class="row clearfix">
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 m-b-0">
+                                        <div class="row clearfix">
+                                            <div class="col-sm-12 m-t-10 m-b-0">
+                                                <b>EMPLOYEE</b>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input readonly="readonly" type="text" class="form-control" placeholder="Enter here..." maxlength="200" value="{{vm.UserModel.HRID}} - {{vm.UserModel.FirstName}} {{vm.UserModel.LastName}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <button ng-disabled="vm.UserModel.Id > 0" class="btn bg-teal waves-effect btn-lg" type="button" data-toggle="modal" data-target="#employeeModal">SEARCH EMPLOYEE</button>
+                                            </div>
+                                            <div class="col-sm-12 m-t-10">
+                                                <b>ROLE</b>
+                                                <div class="form-group">
+                                                    <select class="form-control show-tick" multiple ng-options="x.ItemName for x in vm.Roles track by x.Id" ng-model="vm.UserModel.UserRole" title="Select an Item..." data-live-search="true" my-select>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <button class="btn btn-primary waves-effect btn-lg" type="submit" style="margin-top: 20px;" ng-click="vm.updateUserById()" ng-bind="vm.isSaveOngoing === false ? 'SAVE':'SAVING...'" ng-disabled="vm.isSaveOngoing"></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 m-b-0">
+                                        <div class="row clearfix">
+                                            <div class="col-sm-12 m-t-10">
+                                                <table datatable="" dt-options="vm.dtOptions_User" dt-columns="vm.dtColumns_User" dt-instance="vm.dtInstance_User" class="table table-bordered bordered table-striped table-condensed" style="width: 100%;">
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="qrcode-tab">
+                                <!-- Select -->
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0">
+                                        <div ng-if="vm.IsExtracting === true">
+                                            <h3 style="width: 175px;display: inline-block;">Loading data...</h3>
+                                            <div class="preloader pl-size-xs">
+                                                <div class="spinner-layer">
+                                                    <div class="circle-clipper left">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                    <div class="circle-clipper right">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <form ng-if="vm.IsExtracting === false">
+                                            <div class="row clearfix">
+                                                <div class="col-sm-12 m-t-10" style="text-align: end">
+                                                    <button class="btn btn-primary" ng-click="vm.printQr();">Print QR</button>
+                                                </div>
+                                                <div class="col-sm-12 m-t-10">
+                                                    <table datatable="ng" class="table table-bordered bordered table-striped table-condensed" style="width: 100%;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th></th>
+                                                                <th>CONTROL NO</th>
+                                                                <th>DESCRIPTION</th>
+                                                                <th>SITE</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr ng-repeat="item in vm.AssetQr">
+                                                                <td>
+                                                                    <input type="checkbox" id="{{item.ControlNo}}" ng-model='item.IsChecked'>
+                                                                    <label for="{{item.ControlNo}}" value="{{item.IsChecked}}"></label>
+                                                                </td>
+                                                                <td>{{item.ControlNo}}</td>
+                                                                <td>{{item.Description}}</td>
+                                                                <td>{{item.Site}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- #END# Select -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="employeeModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title defaultModalLabel">SEARCH EMPLOYEE</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0">
+                                <div class="row clearfix">
+                                    <div class="col-sm-12 m-t-10">
+                                        <b>HRID</b>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.SearchEmployeeHrid">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row clearfix">
+                                    <div class="col-sm-12 m-t-10 m-b-10">
+                                        <div class="form-group">
+                                            <button ng-disabled="vm.SearchEmployeeHrid === null || vm.SearchEmployeeHrid === undefined || vm.SearchEmployeeHrid.length < 1" type="button" class="btn bg-teal waves-effect float-right" ng-click="vm.getEmployeeByHrid()">FIND</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row clearfix">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 m-b-0">
+                                        <div class="row clearfix">
+                                            <div class="col-sm-12 m-t-10">
+                                                <b class="to-upper">first name</b>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input readonly="readonly" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.TmpEmployee.FirstName">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row clearfix">
+                                            <div class="col-sm-12 m-t-10">
+                                                <b class="to-upper">LOB</b>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input readonly="readonly" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.TmpEmployee.LineOfBusiness">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 m-b-0">
+                                        <div class="row clearfix">
+                                            <div class="col-sm-12 m-t-10">
+                                                <b class="to-upper">last name</b>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input readonly="readonly" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.TmpEmployee.LastName">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row clearfix">
+                                            <div class="col-sm-12 m-t-10">
+                                                <b class="to-upper">Site</b>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input readonly="readonly" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.TmpEmployee.BuildingAssignment">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link waves-effect" ng-click="vm.useSearchedEmployee()">USE</button>
+                    <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- #START# Modals -->
+    <div class="modal fade" id="QRCodeModal" name="QRCodeModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                @*<div class="modal-header">
+                        <h4 class="modal-title">Are you having trouble?</h4>
+                    </div>*@
+                <div class="modal-body">
+                    <div class="row clearfix" id="section-to-print">
+                        <div class="col-sm-2 m-t-10 img-container" ng-repeat="item in vm.SelectedQr">
+                            <b>{{item.ControlNo}}</b>
+                            <span>
+                                <img ng-src="{{item.QRCode}}" loading="lazy" class="img" alt="Asset Image" title="Asset Image" style="width: 100%;" />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary waves-effect" id="print-me">PRINT</button>
+                    <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Modals -->
+</section>
+@section scripts
+{
+    <script>
+        var requestorId = "@(User.Identity.GetUserId()?.ToLower())";
+        $("#notifyModal").on("hidden.bs.modal",
+            function() {
+                Cookies.set("popup", "1");
+            });
+        $(document).on("click",
+            "#print-me",
+            function(e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                jQuery('#section-to-print').print();
+            });
+    </script>
+    <script src="~/public/app/controllers/asset-manage.controller.js@(ConfigurationManager.AppSettings["IMPORT_VERSION"])"></script>
+    <script src="~/public/app/controllers/expiry.controller.js@(ConfigurationManager.AppSettings["IMPORT_VERSION"])"></script>
+}

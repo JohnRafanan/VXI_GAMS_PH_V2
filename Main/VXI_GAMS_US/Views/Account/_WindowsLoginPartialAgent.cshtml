@@ -1,0 +1,14 @@
+﻿@using Microsoft.Owin.Security
+@using VXI_GAMS_US.Models
+@model LoginViewModel
+@using (Html.BeginWindowsAuthForm(new { role = "form", id = "loginForm" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <div class="form-line">
+            <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
+            @Html.TextBoxFor(m => m.AttUID, new { @class = "form-control", autocomplete = "off", maxlength = "7", required = "required", placeholder = $"Enter your {Html.DisplayNameFor(n => n.AttUID)}" })
+        </div>
+    </div>
+    <input type="submit" value="LOGIN" class="btn btn-primary m-t-15 waves-effect f-20 w-100-p" />
+}

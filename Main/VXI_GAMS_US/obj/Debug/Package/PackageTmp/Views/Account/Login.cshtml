@@ -1,0 +1,83 @@
+﻿@using VXI_GAMS_US.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "LOGIN";
+}
+<style>
+    ul {
+        padding-left: 0;
+    }
+    .validation-summary-errors ul {
+        list-style-type: none;
+    }
+    #AttUID {
+        text-transform: uppercase;
+    }
+</style>
+<section class="content" ng-controller="loginCtrl as vm">
+    <div class="container-fluid">
+        <div class="block-header">
+            <!-- Vertical Layout -->
+            <div class="row clearfix centered">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="login-box">
+                    <div class="card">
+                        <div class="body">
+                            @Html.Partial("WindowsLogin")
+
+                            <input type="button" id="btnRetry" value="RE-TRY LOGIN" class="btn btn-primary m-t-15 waves-effect f-20 w-100-p no-display" />
+
+                            <div class="centered login-loaders">
+                                <p>Please wait...</p>
+                            </div>
+                            <div class="centered login-loaders">
+                                <div class="preloader">
+                                    <div class="spinner-layer pl-red-grey">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs no-display" role="tablist">
+                                <li role="presentation" class="active"><a href="#attuid-tab" data-toggle="tab" id="user-tab">AGENT</a></li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content no-display">
+                                <div role="tabpanel" class="tab-pane fade in active" id="attuid-tab">
+                                    @Html.Partial("_WindowsLoginPartial")
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- #END# Vertical Layout -->
+        </div>
+        <!-- #END# Multi Column -->
+    </div>
+</section>
+@section scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            $(document).on("click", "#btnRetry", function(e) {
+                e.preventDefault();
+                $("#submitWindowLogin").click();
+            });
+            var ctr = $(".validation-summary-errors.text-danger li:first").length;
+            if (ctr > 0) {
+                $("#btnRetry").removeClass("no-display");
+                $(".login-loaders").addClass("no-display");
+            } else {
+                $("#submitWindowLogin").click();
+            }
+        });
+    </script>
+    @Scripts.Render("~/bundles/controller/login")
+}

@@ -1,0 +1,8 @@
+﻿@using Microsoft.Owin.Security
+
+@using (Html.BeginWindowsAuthForm(new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
+    <input type="submit" id="submitWindowLogin" value="LOGIN" class="btn btn-primary m-t-15 waves-effect f-20 w-100-p" />
+}

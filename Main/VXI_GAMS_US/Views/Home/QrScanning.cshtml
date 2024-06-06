@@ -1,0 +1,926 @@
+﻿@using System.Configuration
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "QR SCANNING";
+}
+<style>
+    @@media (max-width: 767px) {
+        .navbar > .container .navbar-brand,
+        .navbar > .container-fluid .navbar-brand {
+            width: auto;
+            width: 130px;
+            height: 40px;
+        }
+
+        .navbar-toggle {
+            display: none;
+        }
+
+        .img {
+            max-width: 325px;
+        }
+
+        #vxiLogo {
+            height: 35px !important;
+            width: 80px !important;
+        }
+
+        #divCard {
+            padding: 0px;
+            margin-left: -8px;
+        }
+    }
+</style>
+<section class="content" ng-controller="homeCtrl as vm">
+    <div class="container-fluid">
+        @*<span class="label label-default normal">For dropdown issue, press <strong>Ctrl</strong>+<strong>Shift</strong>+<strong>R</strong> on your keyboard</span>
+            <span class="label label-warning normal">For access issue, click "<strong>WAH Remote Support</strong>" logo above</span>*@
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="divCard">
+                <div class="card">
+                    <div class="body p-t-5">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active"><a href="#home" data-toggle="tab" aria-expanded="true">ASSET</a></li>
+
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade active in" id="home">
+                                <!-- Select -->
+                                <div class="row clearfix">
+
+
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0">
+                                        <div class="row clearfix">
+                                            <button class="btn bg-cyan waves-effect btn-lg float-right m-r-15" type="button" ng-click="vm.openQrCodeModal()">SCAN QR CODE</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 m-b-0">
+                                        <div class="row clearfix">
+                                            <div class="col-sm-12 m-t-10 img-container">
+                                                <b>IMAGE</b>
+                                                <span class="qrcode-container">
+                                                    <img ng-if="vm.Asset.ImageFile !== null && vm.Asset.ImageFile !== undefined && vm.Asset.ImageFile.length > 0" ng-src="{{vm.Asset.ImageFile}}" loading="lazy" class="img" alt="Asset Image" title="Asset Image" />
+                                                    <img ng-if="vm.Asset.ImageFile === null || vm.Asset.ImageFile === undefined || vm.Asset.ImageFile.length < 1" src="~/public/image/img_placeholder.png" loading="lazy" class="img" alt="Asset Image" title="Asset Image" />
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row clearfix">
+                                            <div class="col-sm-12 align-center">
+                                                <div class="form-group" style="margin-bottom: 8px;">
+                                                    <input type="file" ng-model="vm.UploadingFile.Image" class="no-display" id="new-asset-img" accept="image/*" file-upload-on-change="setImage" />
+                                                    <button type="button" class="btn btn-block waves-effect shadowless upload-btn">UPLOAD PHOTO</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row clearfix">
+                                            <div class="col-sm-12 m-t-10 img-container">
+                                                <b>QR CODE</b>
+                                                <span class="qrcode-container">
+                                                    <img ng-if="vm.Asset.QRCode !== null && vm.Asset.QRCode !== undefined && vm.Asset.QRCode.length > 0" ng-src="{{vm.Asset.QRCode}}" loading="lazy" class="img" alt="QR CODE" title="QR CODE" />
+                                                    <img ng-if="vm.Asset.QRCode === null || vm.Asset.QRCode === undefined || vm.Asset.QRCode.length < 1" src="~/public/image/img_placeholder.png" loading="lazy" class="img" alt="QR CODE" title="QR CODE" />
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 m-b-0">
+
+                                        <form>
+                                            <div class="row clearfix">
+                                                <div class="col-sm-12 m-t-10">
+                                                    <b>DESCRIPTION <span class="required-field">*</span></b>
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <input type="text" readonly="readonly" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.Description">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row clearfix">
+                                                <div class="col-sm-12 m-t-10">
+                                                    <b>CATEGORY</b>
+                                                    <div class="form-group">
+                                                        <select class="form-control show-tick" id="select-openrecords-category" ng-options="x.ItemName for x in vm.Categories track by x.Id" ng-model="vm.Asset.Category" title="Select an Item..." data-live-search="true" my-select></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row clearfix">
+                                                <div class="col-sm-12 m-t-10">
+                                                    <b>SUBCATEGORY <span class="required-field">*</span></b>
+                                                    <div class="form-group">
+                                                        <select class="form-control show-tick" id="select-openrecords-subcategory" ng-options="x.ItemName for x in vm.SubCategories track by x.Id" ng-model="vm.Asset.SubCategory" title="Select an Item..." data-live-search="true" my-select></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row clearfix">
+                                                <div class="col-sm-12 m-t-10">
+                                                    <b>SITE <span class="required-field">*</span></b>
+                                                    <div class="form-group">
+                                                        <select disabled="disabled" class="form-control show-tick" id="select-openrecords-site" ng-options="x.ItemName for x in vm.Sites track by x.ItemId" ng-model="vm.Asset.Site" title="Select an Item..." data-live-search="true" my-select></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row clearfix">
+                                                <div class="col-sm-12 m-t-10">
+                                                    <b class="to-upper">WORK TYPE</b>
+                                                    <div class="form-group">
+                                                        <select class="form-control show-tick" ng-model="vm.Asset.WorkType" title="Select an Item..." data-live-search="true" my-select>
+                                                            <option ng-repeat="x in vm.WorkTypes" value="{{x}}">{{x}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row clearfix" ng-if="vm.Asset.WorkType === 'WAS'">
+                                                <div class="col-sm-12 m-t-10">
+                                                    <b>FLOOR</b>
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.FLoor">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row clearfix" ng-if="vm.Asset.WorkType === 'WAS'">
+                                                <div class="col-sm-12 m-t-10">
+                                                    <b>AREA/WORKSTATION</b>
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.AreaWorkStation">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row clearfix" ng-if="vm.Asset.WorkType === 'WAH'">
+                                                <div class="col-sm-12 m-t-10">
+                                                    <b>HOME ADDRESS</b>
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.HomeAddress">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row clearfix">
+                                                <div class="col-sm-12 m-t-10">
+                                                    <b>EMPLOYEE</b>
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <input readonly="readonly" type="text" class="form-control" placeholder="Enter here..." maxlength="200" value="{{vm.Asset.Employee.HRID}} - {{vm.Asset.Employee.FirstName}} {{vm.Asset.Employee.LastName}}">
+                                                        </div>
+                                                        <button ng-disabled="vm.Asset.Description === null || vm.Asset.Description === undefined || vm.Asset.Description.length < 1" class="btn bg-teal waves-effect btn-lg" type="button" ng-click="vm.openEmployeeWindow()">SEARCH EMPLOYEE</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 m-b-0">
+
+                                        <form>
+                                            <div class="row clearfix">
+                                                <div class="col-sm-12 m-t-10">
+                                                    <b class="to-upper">CONTROL NO</b>
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <input type="text" readonly="readonly" class="form-control" placeholder="(Autogenerated)" maxlength="200" ng-model="vm.Asset.ControlNo">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row clearfix">
+                                                <div class="col-sm-12 m-t-10">
+                                                    <b>VENDOR <span class="required-field">*</span></b>
+                                                    <div class="form-group">
+                                                        <select disabled="disabled" class="form-control show-tick" id="select-openrecords-vendor" ng-options="x.ItemName for x in vm.Vendors track by x.Id" ng-model="vm.Asset.Vendor" title="Select an Item..." data-live-search="true" my-select></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row clearfix">
+                                                <div class="col-sm-12 m-t-10">
+                                                    <b>SERIAL NO <span class="required-field">*</span></b>
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.SerialNo">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row clearfix">
+                                                <div class="col-sm-12 m-t-10">
+                                                    <b>SALES INVOICE</b>
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.SalesInvoice">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row clearfix">
+                                                <div class="col-sm-12 m-t-10">
+                                                    <b>GR NO</b>
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.GrNo">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row clearfix">
+                                                <div class="col-sm-12 m-t-10">
+                                                    <b>LOB OWNER <span class="required-field">*</span></b>
+                                                    <div class="form-group">
+                                                        <select class="form-control show-tick" id="select-openrecords-lobowner" ng-options="x.ItemName for x in vm.Lobs track by x.Id" ng-model="vm.Asset.LobOwner" title="Select an Item..." data-live-search="true" my-select></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row clearfix">
+                                                <div class="col-sm-12 m-t-10">
+                                                    <b>BRAND <span class="required-field">*</span></b>
+                                                    <div class="form-group">
+                                                        <select class="form-control show-tick" id="select-openrecords-brand" ng-options="x.ItemName for x in vm.Brands track by x.Id" ng-model="vm.Asset.Brand" title="Select an Item..." data-live-search="true" my-select></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row clearfix">
+                                                <div class="col-sm-12 m-t-10">
+                                                    <b>MODEL <span class="required-field">*</span></b>
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.Model">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-sm-12">
+
+                                        <button class="btn btn-primary waves-effect btn-lg" type="submit" style="float: right;" ng-click="vm.saveNewAsset()" ng-bind="vm.isSaveOngoing === false ? 'SAVE CHANGES':'SAVING...'" ng-disabled="vm.Asset.Description === null || vm.Asset.Description === undefined || vm.Asset.Description.length < 1 || vm.isSaveOngoing"></button>
+
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0" style="margin-top: 10px;">
+                                        <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading" role="tab" id="headingOne_1">
+                                                    <h4 class="panel-title">
+                                                        <a role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapseOne_1" aria-expanded="false" aria-controls="collapseOne_1" class="collapsed">
+                                                            GENERAL
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseOne_1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne_1" aria-expanded="false" style="height: 0px;">
+                                                    <div class="panel-body">
+                                                        <div class="row clearfix">
+                                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 m-b-0">
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>STATUS</b>
+                                                                        <div class="form-group">
+                                                                            <select class="form-control show-tick" id="select-openrecords-status" ng-options="x.ItemName for x in vm.AssetStatus track by x.Id" ng-model="vm.Asset.AssetStatus" title="Select an Item..." data-live-search="true" my-select></select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>TAG DATE</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input type="date" disabled="disabled" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.TagDate">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>DELIVERY DATE</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input type="date" disabled="disabled" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.DeliveryDate">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>GROUP</b>
+                                                                        <div class="form-group">
+                                                                            <select disabled class="form-control show-tick" ng-options="x.ItemName for x in vm.Groups track by x.Id" ng-model="vm.Asset.Group" title="No Assigned Group" data-live-search="true" my-select>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 m-b-0">
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>WARRANTY START DATE</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input type="date" disabled="disabled" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.WarrantyStartDate">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>WARRANTY END DATE</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input type="date" disabled="disabled" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.WarrantyEndDate">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>NOTES</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <textarea rows="4" class="form-control no-resize" placeholder="Enter here..." ng-model="vm.Asset.Remarks"></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading" role="tab" id="headingTwo_1">
+                                                    <h4 class="panel-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapseTwo_1" aria-expanded="false" aria-controls="collapseTwo_1">
+                                                            FINANCIAL
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseTwo_1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo_1" aria-expanded="false" style="height: 0px;">
+                                                    <div class="panel-body">
+                                                        <div class="row clearfix">
+                                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 m-b-0">
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>DELIVERY NO.</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input disabled="disabled" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.DeliveryNo">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>PURCHASE DATE</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input disabled="disabled" type="date" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.PurchaseDate">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>PURCHASE ORDER NO.</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input disabled="disabled" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.PuchaseOrderNo">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>INVOICE NO.</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input disabled="disabled" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.InvoiceNo">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>Service Date</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input type="date" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.ServiceDate">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>PURCHASE PRICE</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input disabled="disabled" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.PurchasePrice">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 m-b-0">
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>FINANCIAL TREATMENT</b>
+                                                                        <div class="form-group">
+                                                                            <select class="form-control show-tick" id="select-openrecords-financialtreatment" ng-options="x.ItemName for x in vm.FinancialTreatments track by x.Id" ng-model="vm.Asset.FinancialTreatment" title="Select an Item..." data-live-search="true" my-select></select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>LOCAL COST CENTER</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.LocalCostCenter">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>DATE FULLY DEPRECIATED</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input type="date" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.DateDepreciated">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>ASSET LIFE(MONTH)</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.LifeMonth">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>MONTHLY DEPRECIATION</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.MonthlyDepreciation">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>RMNG ASSET LIFE(MONTH)</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.RemainingLifeMonth">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @*<div class="panel panel-primary">
+                                                <div class="panel-heading" role="tab" id="headingThree_1">
+                                                    <h4 class="panel-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapseThree_1" aria-expanded="false" aria-controls="collapseThree_1">
+                                                            PEZA
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseThree_1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree_1" aria-expanded="false">
+                                                    <div class="panel-body">
+                                                        <div class="row clearfix">
+                                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 m-b-0">
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <h3 style="margin: 0; text-decoration: underline;">FARM IN</h3>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>CONTROL NO.</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input disabled="disabled" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.PezaFarmInControlNo">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>PERMIT STATUS</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input disabled="disabled" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.PezaFarmInPermitStatus">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>FORM NO.</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input disabled="disabled" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.PezaFarmInFormNo">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>APPROVAL NO.</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input disabled="disabled" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.PezaFarmInApprovalNo">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 m-b-0">
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <h3 style="margin: 0; text-decoration: underline;">FARM OUT</h3>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>CONTROL NO.</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input disabled="disabled" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.PezaFarmOutControlNo">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>PERMIT STATUS</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input disabled="disabled" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.PezaFarmOutPermitStatus">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>FORM NO.</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input disabled="disabled" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.PezaFarmOutFormNo">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>APPROVAL NO.</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input disabled="disabled" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.PezaFarmOutApprovalNo">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>*@
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading" role="tab" id="headingFour_1">
+                                                    <h4 class="panel-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapseFour_1" aria-expanded="false" aria-controls="collapseFour_1">
+                                                            MAINTENANCE AGREEMENT
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseFour_1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour_1" aria-expanded="false">
+                                                    <div class="panel-body">
+                                                        <div class="row clearfix">
+                                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 m-b-0">
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>MAINTENANCE VENDOR</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.Maintenance_Vendor">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>EMAIL ADDRESS TO NOTIFY</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <textarea rows="4" class="form-control no-resize" placeholder="Enter here..." ng-model="vm.Asset.Maintenance_Emails"></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>REMARKS</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <textarea rows="4" class="form-control no-resize" placeholder="Enter here..." ng-model="vm.Asset.Maintenance_Remarks"></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 m-b-0">
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>MAINTENANCE START DATE</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input type="date" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.Maintenance_MaintenanceStartDate">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>MAINTENANCE END DATE</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input type="date" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.Maintenance_MaintenanceEndDate">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading" role="tab" id="headingFive_1">
+                                                    <h4 class="panel-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapseFive_1" aria-expanded="false" aria-controls="collapseFive_1">
+                                                            CONTRACT
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseFive_1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive_1" aria-expanded="false">
+                                                    <div class="panel-body">
+                                                        <div class="row clearfix">
+                                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 m-b-0">
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>CONTRACT TYPE</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.Contract_ContactType">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>REMARKS</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <textarea rows="4" class="form-control no-resize" placeholder="Enter here..." ng-model="vm.Asset.Contract_Remarks"></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 m-b-0">
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>CONTRACT START DATE</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input type="date" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.Contract_ContractStartDate">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row clearfix">
+                                                                    <div class="col-sm-12 m-t-10">
+                                                                        <b>CONTRACT END DATE</b>
+                                                                        <div class="form-group">
+                                                                            <div class="form-line">
+                                                                                <input type="date" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.Asset.Contract_ContractEndDate">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading" role="tab" id="headingSix_1">
+                                                    <h4 class="panel-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapseSix_1" aria-expanded="false" aria-controls="collapseSix_1">
+                                                            ATTACHMENTS
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseSix_1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix_1" aria-expanded="false">
+                                                    <div class="panel-body">
+                                                        <div class="row clearfix">
+                                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 m-b-0">
+                                                                <div class="form-group">
+                                                                    <input type="file" multiple ng-model="vm.UploadingFile.AssetAttachments" class="no-display" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, .csv, .pdf, text/plain" file-upload-on-change="setAssetAttachments" />
+                                                                    <button ng-disabled="vm.Asset.Id < 1 || vm.isSaveOngoing === true" class="btn bg-teal waves-effect btn-lg upload-btn" type="button" ng-bind="vm.isSaveOngoing === false ? 'UPLOAD ATTACHMENTS':'SAVING...'"></button>
+                                                                    <button ng-disabled="vm.Asset.Id < 1 || vm.isSaveOngoing === true" class="btn btn-primary waves-effect btn-lg" type="button" ng-click="vm.saveAssetAttachments()" ng-bind="vm.isSaveOngoing === false ? 'SAVE  ('+vm.UploadingFile.AssetAttachments.length+') ITEMS':'SAVING...'"></button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 m-b-0">
+                                                                <div class="form-group">
+                                                                    <button ng-disabled="vm.Asset.Id < 1 || vm.isSaveOngoing === true" class="btn bg-brown waves-effect btn-lg float-right" type="button" ng-click="vm.resetAssetAttachments()" ng-bind="vm.isSaveOngoing === false ? 'RELOAD':'SAVING...'"></button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0">
+                                                                <div class="row clearfix">
+                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 no-display" id="asset-attachment-loader">
+                                                                        <div class="preloader pl-size-xs">
+                                                                            <div class="spinner-layer pl-red-grey">
+                                                                                <div class="circle-clipper left">
+                                                                                    <div class="circle"></div>
+                                                                                </div>
+                                                                                <div class="circle-clipper right">
+                                                                                    <div class="circle"></div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-repeat="attachment in vm.AssetAttachments">
+                                                                        <a href="javascript:void(0)" ng-click="vm.getAssetAttachmentById(attachment.Id, attachment.FileName)">
+                                                                            <i class="material-icons">attach_file</i>
+                                                                            <span ng-bind="attachment.FileName"></span>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading" role="tab" id="headingSeven_1">
+                                                    <h4 class="panel-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapseSeven_1" aria-expanded="false" aria-controls="collapseSeven_1">
+                                                            HISTORY
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseSeven_1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven_1" aria-expanded="false">
+                                                    <div class="panel-body">
+                                                        <div class="row clearfix">
+                                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0">
+                                                                <ul>
+                                                                    <li ng-repeat="history in vm.Asset.History" ng-bind="history.Value"></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- #END# Select -->
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- #START# NewAssetModal Modal -->
+    <div class="modal fade" id="qrCodeModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title defaultModalLabel">SCANNING QR CODE</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="centered" id="preview-container">
+                        <video id="preview"></video>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link waves-effect" data-dismiss="modal" ng-click="vm.stopCamera()">CLOSE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# FarmInLineItem Modals -->
+    <div class="modal fade" id="employeeModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title defaultModalLabel">SEARCH EMPLOYEE</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-0">
+                                <div class="row clearfix">
+                                    <div class="col-sm-12 m-t-10">
+                                        <b>HRID</b>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.SearchEmployeeHrid">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row clearfix">
+                                    <div class="col-sm-12 m-t-10 m-b-10">
+                                        <div class="form-group">
+                                            <button ng-disabled="vm.SearchEmployeeHrid === null || vm.SearchEmployeeHrid === undefined || vm.SearchEmployeeHrid.length < 1" type="button" class="btn bg-teal waves-effect float-right" ng-click="vm.getEmployeeByHrid()">FIND</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row clearfix">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 m-b-0">
+                                        <div class="row clearfix">
+                                            <div class="col-sm-12 m-t-10">
+                                                <b class="to-upper">first name</b>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input readonly="readonly" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.TmpEmployee.FirstName">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row clearfix">
+                                            <div class="col-sm-12 m-t-10">
+                                                <b class="to-upper">LOB</b>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input readonly="readonly" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.TmpEmployee.LineOfBusiness">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 m-b-0">
+                                        <div class="row clearfix">
+                                            <div class="col-sm-12 m-t-10">
+                                                <b class="to-upper">last name</b>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input readonly="readonly" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.TmpEmployee.LastName">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row clearfix">
+                                            <div class="col-sm-12 m-t-10">
+                                                <b class="to-upper">Site</b>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input readonly="readonly" type="text" class="form-control" placeholder="Enter here..." maxlength="200" ng-model="vm.TmpEmployee.BuildingAssignment">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link waves-effect" ng-click="vm.useSearchedEmployee()">USE</button>
+                    <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section scripts
+{
+    <script>
+        $.fn.modal.prototype.constructor.Constructor.DEFAULTS.backdrop = 'static';
+        $(document).on("click", ".upload-btn", function () {
+            $($(this).siblings()[0]).click();
+        });
+    </script>
+
+    <script>
+    </script>
+    <script src="~/public/plugins/instascan/instascan.min.js"></script>
+    <script src="~/public/app/controllers/home.controller.js@(ConfigurationManager.AppSettings["IMPORT_VERSION"])"></script>
+}

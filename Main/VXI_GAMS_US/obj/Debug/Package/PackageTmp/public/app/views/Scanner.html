@@ -1,0 +1,572 @@
+﻿<style>
+    .jumbotron {
+        margin: 0 auto;
+        max-width: 500px;
+        text-align: center;
+        background-color: transparent;
+    }
+
+    .input-group .form-control:last-child {
+        color: royalblue;
+    }
+
+    b {
+        font-weight: 900;
+    }
+
+    .card .header h2 {
+        text-align: center;
+    }
+
+    .input-group .form-line {
+        border-bottom: 2px solid #000 !important;
+    }
+
+    .form-control {
+        color: #5a7de5 !important;
+    }
+
+    .btn:not(.btn-link):not(.btn-circle) i {
+        top: 3px;
+        right: 0;
+    }
+
+    .result-item {
+        color: royalblue;
+        padding: 3px 0;
+    }
+
+    .action-btn {
+        width: 100%;
+    }
+
+    #assetModal {
+        padding: 0 !important;
+    }
+
+    .fake-input {
+        border-bottom: 2px solid black !important;
+        padding: 5px !important;
+        font-size: 14px !important;
+        color: #6082e6 !important;
+        text-transform: uppercase !important;
+    }
+
+    section {
+        margin-bottom: 30px;
+    }
+
+    /*    @media (min-width: 1900px) {
+        .col-lg-6 {
+            width: 40%;
+        }
+
+        .col-lg-3 {
+            width: 30%;
+        }
+    }
+
+    @media (max-width: 1300px) {
+        .col-lg-6 {
+            width: 40%;
+        }
+
+        .col-lg-3 {
+            width: 30%;
+        }
+    }*/
+
+    table {
+        color: black !important;
+    }
+</style>
+<div class="page-loader-wrapper">
+    <div class="loader">
+        <div class="preloader">
+            <div class="spinner-layer pl-red">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+        <p>Please wait...</p>
+    </div>
+</div>
+<div class="jumbotron">
+    <div class="row clearfix">
+        <div class="panel panel-primary">
+            <div class="panel-heading">SCAN QR CODE</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label>Choose camera:</label>
+                    <select id="webcameraChanger" onchange="cameraChange($(this).val());"></select>
+                </div>
+                <!-- webcamera view component -->
+                <video id="webcameraPreview" playsinline autoplay controls muted loop></video>
+            </div>
+        </div>
+    </div>
+</div>
+<section ng-if="Asset.Code !== undefined">
+
+    <div class="row clearfix">
+        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12"></div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-teal">
+                    <h2>
+                        <strong ng-bind="Asset.Code">ASSET REFERENCE NUMBER HERE</strong>
+                    </h2>
+                </div>
+                <div class="body">
+
+                    <div class="row clearfix">
+                        <div class="col-md-6">
+                            <b>DESCRIPTION <span class="required-field">*</span></b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" ng-model="Asset.Description" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <b>SERIAL # <span class="required-field">*</span></b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" ng-model="Asset.SerialNo" class="form-control text-uppercase">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-md-6">
+                            <b>CATEGORY <span class="required-field">*</span></b>
+                            <div class="form-group">
+                                <select class="form-control show-tick" ng-model="Asset.Category" id="select-openrecords-category" ng-options="x for x in Categories track by x" title="Select an Item..." data-live-search="true" my-select>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <b>SUB-CATEGORY <span class="required-field">*</span></b>
+                            <div class="form-group">
+                                <select class="form-control show-tick" ng-model="Asset.SubCategory" id="select-openrecords-category" ng-options="x for x in SubCategories track by x" title="Select an Item..." data-live-search="true" my-select>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-md-6">
+                            <b>STATUS <span class="required-field">*</span></b>
+                            <div class="form-group">
+                                <select class="form-control show-tick" ng-model="Asset.Status" id="select-openrecords-category" ng-options="x for x in Statuses track by x" title="Select an Item..." data-live-search="true" my-select>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <b>BRAND <span class="required-field">*</span></b>
+                            <div class="form-group">
+                                <select class="form-control show-tick" ng-model="Asset.Manufacturer" id="select-openrecords-category" ng-options="x for x in Manufacturers track by x" title="Select an Item..." data-live-search="true" my-select>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-md-6">
+                            <b>PURCHASE ORDER</b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" ng-model="Asset.PurchaseOrder" class="form-control text-uppercase" alpha-numbers>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <b>COST VALUE</b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" ng-model="Asset.CostValue" class="form-control" maxlength="12" decimal-only>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-md-12">
+                            <b>SITE</b> <code>(READ-ONLY, USE <b>TRANSFER TO SITE</b> TO UPDATE)</code>
+                            <div class="form-group">
+                                <select disabled class="form-control show-tick" ng-model="Asset.Site" ng-options="x for x in Sites track by x" title="Select an Item..." data-live-search="true" my-select>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row clearfix">
+                        <div class="col-md-12">
+                            <button type="button" class="btn bg-deep-orange waves-effect" ng-click="updateAsset()">
+                                SAVE CHANGES
+                            </button>
+                            <button type="button" class="btn bg-light-blue waves-effect float-right" ng-click="openHistoryModal()">
+                                VIEW HISTORY
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12"></div>
+    </div>
+
+    <div class="row clearfix">
+        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12"></div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-light-green">
+                    <h2><strong>TRANSFER TO OTHER SITE</strong></h2>
+                </div>
+                <div class="body">
+                    <div class="row clearfix">
+                        <div class="col-md-12">
+                            <b>SITE <span class="required-field">*</span></b>
+                            <div class="form-group">
+                                <select class="form-control show-tick" ng-model="Transfer.Site" ng-options="x for x in Sites track by x" title="Select an Item..." data-live-search="true" my-select>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-md-6">
+                            <b>TRACKING # <span class="required-field">*</span></b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" ng-model="Transfer.TrackingNumber" class="form-control text-uppercase">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <b>IT TICKET # <span class="required-field">*</span></b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" ng-model="Transfer.ItTicketNumber" class="form-control text-uppercase">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-md-12">
+                            <button type="button" class="btn bg-deep-orange waves-effect" ng-click="transferAsset()" ng-disabled="Asset.Id === null">
+                                PROCESS TRANSFER
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12"></div>
+    </div>
+
+    <div class="row clearfix">
+        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12"></div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-blue">
+                    <h2><strong>ASSIGN TO EMPLOYEE</strong></h2>
+                </div>
+                <div class="body">
+                    <div class="row clearfix">
+                        <div class="col-md-12">
+                            <b>WAH/WAS <span class="required-field">*</span></b>
+                            <div class="form-group">
+                                <select class="form-control show-tick" ng-model="Assign.WorkType" ng-options="x for x in WorkTypes track by x" title="Select an Item..." data-live-search="true" my-select>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row clearfix" style="margin-bottom: 8px;">
+                        <div class="col-md-12">
+                            <b>EMPLOYEE NAME <code>(READ ONLY)</code></b>
+
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-addon">
+                                    <button type="button" class="form-control btn bg-orange waves-effect" ng-click="openSearchEmployee()" ng-disabled="Asset.Hrid !== null">
+                                        <i class="material-icons">search</i>
+                                    </button>
+                                </span>
+                                <div class="form-line">
+                                    <p ng-if="Asset.Hrid !== null" class="form-control" ng-bind="Asset.EmployeeName" style="margin-top: 8px;"></p>
+                                    <p ng-if="Asset.Hrid === null" class="form-control" style="margin-top: 8px;">&lArr; CLICK TO ASSIGN</p>
+                                </div>
+                            </div>
+
+                            <!--<div class="form-group">
+                                <button type="button" class="form-control btn bg-orange waves-effect" ng-click="openSearchEmployee()" ng-disabled="Asset.Hrid !== null">
+                                    SEARCH BY HRID
+                                </button>
+                            </div>-->
+                        </div>
+                        <!--<div class="col-md-8">
+                            <b>&nbsp;</b>
+                            <div class="form-group">
+                                <p class="form-control fake-input" ng-bind="Asset.EmployeeName" style="margin-bottom: 17px;"></p>
+                            </div>
+                        </div>-->
+                    </div>
+
+                    <div class="row clearfix" ng-if="Assign.WorkType === 'WAH'">
+                        <!--<div class="col-md-6">
+                            <b>EMAIL</b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="email" ng-model="Assign.Email" class="form-control">
+                                </div>
+                            </div>
+                        </div>-->
+                        <div class="col-md-6">
+                            <b>CONTACT # <span class="required-field">*</span></b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" ng-model="Assign.ContactNo" class="form-control" maxlength="15" numbers-only>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <b>ADDRESS <span class="required-field">*</span></b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" ng-model="Assign.Address" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="row clearfix" ng-if="Assign.WorkType === 'WAH'">
+                        <div class="col-md-12">
+                            <b>ADDRESS <span class="required-field">*</span></b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" ng-model="Assign.Address" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>-->
+
+
+                    <div class="row clearfix" ng-if="Assign.WorkType === 'WAS'">
+                        <div class="col-md-6">
+                            <b>FLOOR <span class="required-field">*</span></b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" ng-model="Assign.Floor" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <b>AREA <span class="required-field">*</span></b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" ng-model="Assign.AreaWorkStation" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row clearfix">
+                        <div class="col-md-6">
+                            <b>TRACKING #(FOR ASSIGNMENT) <span class="required-field">*</span></b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" ng-model="Assign.TrackingNo" class="form-control text-uppercase">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <b>IT TICKET #(FOR ASSIGNMENT) <span class="required-field">*</span></b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" ng-model="Assign.TicketNo" class="form-control text-uppercase">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row clearfix">
+                        <div class="col-md-12">
+                            <button type="button" class="btn bg-deep-orange waves-effect" ng-click="assignAssetToEmployee()" ng-disabled="Asset.Hrid !== null">
+                                ASSIGN EMPLOYEE
+                            </button>
+                        </div>
+                    </div>
+
+                    <hr style="border-bottom: 2px solid #5a7de5" />
+                    <div class="row clearfix">
+                        <div class="col-md-6">
+                            <b>TRACKING #(FOR REMOVAL) <span class="required-field">*</span></b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" ng-model="TrackTicket.TrackingNo" class="form-control text-uppercase">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <b>IT TICKET #(FOR REMOVAL) <span class="required-field">*</span></b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" ng-model="TrackTicket.TicketNo" class="form-control text-uppercase">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row clearfix">
+                        <div class="col-md-12">
+                            <button type="button" class="btn bg-deep-orange waves-effect" ng-click="removeAssignAsset()" ng-disabled="Asset.Hrid === null">
+                                REMOVE ASSIGNMENT
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12"></div>
+    </div>
+
+</section>
+<div class="modal fade" id="employeeModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-uppercase" ng-bind="'ASSIGN - '+ Asset.Code"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="row clearfix">
+                            <div class="col-md-12">
+                                <b>SEARCH HRID</b>
+                                <div class="input-group">
+                                    <div class="form-line">
+                                        <input type="text" ng-model="Search.Hrid" placeholder="Enter HRID here..." class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+                                <b>FIRST NAME</b>
+                                <p class="result-item" ng-bind="Search.Result.FirstName"></p>
+                            </div>
+                            <div class="col-md-6">
+                                <b>LAST NAME</b>
+                                <p class="result-item" ng-bind="Search.Result.LastName"></p>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+                                <b>SITE</b>
+                                <p class="result-item" ng-bind="Search.Result.LocationDesc"></p>
+                            </div>
+                            <div class="col-md-6">
+                                <b>LOB</b>
+                                <p class="result-item" ng-bind="Search.Result.Project"></p>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+                                <b>POSITION</b>
+                                <p class="result-item" ng-bind="Search.Result.TitleName"></p>
+                            </div>
+                            <div class="col-md-6">
+                                <b>SUPERVISOR</b>
+                                <p class="result-item" ng-bind="Search.Result.SupervisorID"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn waves-effect bg-deep-orange" ng-disabled="Search.Result.ID === undefined" data-dismiss="modal" ng-click="useEmployee()">ASSIGN</button>
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal" ng-click="checkOpenModals();initCamera(cameraId);">CLOSE</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="assetHistoryModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-uppercase" ng-bind="'HISTORY - '+ Asset.Code"></h4>
+            </div>
+            <div class="modal-body">
+
+                <!-- Striped Rows -->
+                <div class="row clearfix">
+
+                    <div ng-if="loadingHistory === true">
+                        <div class="preloader">
+                            <div class="spinner-layer pl-red">
+                                <div class="circle-clipper left">
+                                    <div class="circle"></div>
+                                </div>
+                                <div class="circle-clipper right">
+                                    <div class="circle"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="loadingHistory === false">
+                        <div class="body table-responsive">
+                            <table class="table table-bordered table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>STATUS</th>
+                                        <th>HRID</th>
+                                        <th>NAME</th>
+                                        <th>DATE UPDATED</th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-if="Histories.length === 0">
+                                    <tr>
+                                        <td colspan="4" style="text-align:center;">No Data</td>
+                                    </tr>
+                                </tbody>
+                                <tbody>
+                                    <tr ng-repeat="x in Histories">
+                                        <td ng-bind="x.Status"></td>
+                                        <td ng-bind="x.Hrid"></td>
+                                        <td ng-bind="x.Name"></td>
+                                        <td ng-bind="x.DateUpdated"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Striped Rows -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div style="height: 60px;"></div>-->
+<script>
+    var webcameraChanger = $("#webcameraChanger");
+    var options = {};
+    options = initVideoObjectOptions("webcameraPreview");
+    var cameraId = 0;
+    initScanner(options);
+    initAvaliableCameras(
+        webcameraChanger,
+        function () {
+            cameraId = parseInt(getSelectedCamera(webcameraChanger));
+        }
+    );
+    initCamera(cameraId);
+    $.fn.modal.prototype.constructor.Constructor.DEFAULTS.backdrop = 'static';
+</script>

@@ -1,0 +1,12 @@
+C:\TFS3\VXI_GAMS_PH_V2\Main\VXI_GAMS_US.VIEWS\bin\Release\VXI_GAMS_US.VIEWS.dll.config
+C:\TFS3\VXI_GAMS_PH_V2\Main\VXI_GAMS_US.VIEWS\bin\Release\VXI_GAMS_US.VIEWS.dll
+C:\TFS3\VXI_GAMS_PH_V2\Main\VXI_GAMS_US.VIEWS\bin\Release\VXI_GAMS_US.VIEWS.pdb
+C:\TFS3\VXI_GAMS_PH_V2\Main\VXI_GAMS_US.VIEWS\bin\Release\EntityFramework.dll
+C:\TFS3\VXI_GAMS_PH_V2\Main\VXI_GAMS_US.VIEWS\bin\Release\EntityFramework.SqlServer.dll
+C:\TFS3\VXI_GAMS_PH_V2\Main\VXI_GAMS_US.VIEWS\bin\Release\EntityFramework.xml
+C:\TFS3\VXI_GAMS_PH_V2\Main\VXI_GAMS_US.VIEWS\bin\Release\EntityFramework.SqlServer.xml
+C:\TFS3\VXI_GAMS_PH_V2\Main\VXI_GAMS_US.VIEWS\obj\Release\VXI_GAMS_US.VIEWS.csproj.CoreCompileInputs.cache
+C:\TFS3\VXI_GAMS_PH_V2\Main\VXI_GAMS_US.VIEWS\obj\Release\VXI_GAMS_US.VIEWS.csproj.CopyComplete
+C:\TFS3\VXI_GAMS_PH_V2\Main\VXI_GAMS_US.VIEWS\obj\Release\VXI_GAMS_US.VIEWS.dll
+C:\TFS3\VXI_GAMS_PH_V2\Main\VXI_GAMS_US.VIEWS\obj\Release\VXI_GAMS_US.VIEWS.pdb
+C:\TFS3\VXI_GAMS_PH_V2\Main\VXI_GAMS_US.VIEWS\obj\Release\VXI_GAMS_US.VIEWS.csproj.AssemblyReference.cache
